@@ -799,6 +799,8 @@
                     <button class="share-btn" onclick="copyShareLink()">🔗 複製分享連結</button>
                     <button class="share-btn" onclick="shareFacebook()">Facebook</button>
                     <button class="share-btn" onclick="shareLine()">LINE</button>
+                    <button class="share-btn" onclick="shareThreads()">Threads</button>
+                    <button class="share-btn" onclick="shareTwitter()">X (Twitter)</button>
                     <button class="share-btn" onclick="shareWeChat()">微信</button>
                     <button class="share-btn" onclick="shareImage()">📷 下載圖片</button>
                     <button class="share-btn" onclick="shareWeb()">更多分享</button>
@@ -1827,6 +1829,18 @@ const hexagramIllustrations = {
             const text = `文殊占卜：${currentResult.name} - ${currentResult.fortune}`;
             const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
             window.open(url, 'line-share', 'width=600,height=400');
+        }
+
+        function shareThreads() {
+            const text = `文殊占卜：${currentResult.name} (${currentResult.fortune})\n\n${currentResult.verse}\n\n`;
+            const url = `https://threads.net/intent/post?text=${encodeURIComponent(text + window.location.href)}`;
+            window.open(url, 'threads-share', 'width=600,height=700');
+        }
+
+        function shareTwitter() {
+            const text = `文殊占卜：${currentResult.name} (${currentResult.fortune})\n\n${currentResult.verse}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, 'twitter-share', 'width=600,height=400');
         }
 
         function shareWeChat() {
