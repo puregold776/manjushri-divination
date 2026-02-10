@@ -1644,7 +1644,7 @@ const hexagramIllustrations = {
             const key = `${yellowSyllable}-${whiteSyllable}`;
 
             currentResult = hexagrams[key];
-            displayResult(key, yellowSyllable, whiteSyllable);
+            displayResult(key, yellowSyllable, whiteSyllable, selectedYellow, selectedWhite);
 
             // Switch back to dice view
             toggleManualMode();
@@ -1711,7 +1711,7 @@ const hexagramIllustrations = {
                 const key = `${yellowSyllable}-${whiteSyllable}`;
 
                 currentResult = hexagrams[key];
-                displayResult(key, yellowSyllable, whiteSyllable);
+                displayResult(key, yellowSyllable, whiteSyllable, yellowResult, whiteResult);
 
                 isRolling = false;
                 document.getElementById('rollBtn').disabled = false;
@@ -1724,9 +1724,13 @@ const hexagramIllustrations = {
             }, 3000);
         }
 
-        function displayResult(key, yellowSyllable, whiteSyllable) {
+        function displayResult(key, yellowSyllable, whiteSyllable, yellowIndex = null, whiteIndex = null) {
             const result = hexagrams[key];
             if (!result) return;
+
+            // If indices not provided, find them from syllables
+            if (yellowIndex === null) yellowIndex = syllables.indexOf(yellowSyllable);
+            if (whiteIndex === null) whiteIndex = syllables.indexOf(whiteSyllable);
 
             const fortuneClass = `fortune-${result.fortune}`;
             document.getElementById('fortuneBadge').className = `fortune-badge ${fortuneClass}`;
@@ -1789,10 +1793,10 @@ const hexagramIllustrations = {
 
             document.getElementById('resultSection').classList.add('show');
 
-            // Update URL with hexagram parameters
+            // Update URL with hexagram parameters (using numeric indices)
             const url = new URL(window.location.href);
-            url.searchParams.set('yellow', yellowSyllable);
-            url.searchParams.set('white', whiteSyllable);
+            url.searchParams.set('y', yellowIndex);
+            url.searchParams.set('w', whiteIndex);
             window.history.pushState({}, '', url);
         }
 
@@ -2014,19 +2018,20 @@ const hexagramIllustrations = {
         // Check URL parameters on page load
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            const yellowSyllable = urlParams.get('yellow');
-            const whiteSyllable = urlParams.get('white');
+            const yellowIndexStr = urlParams.get('y');
+            const whiteIndexStr = urlParams.get('w');
 
-            if (yellowSyllable && whiteSyllable) {
-                const key = `${yellowSyllable}-${whiteSyllable}`;
-                const result = hexagrams[key];
+            if (yellowIndexStr !== null && whiteIndexStr !== null) {
+                const yellowIndex = parseInt(yellowIndexStr);
+                const whiteIndex = parseInt(whiteIndexStr);
 
-                if (result) {
-                    // Find syllable indices
-                    const yellowIndex = syllables.indexOf(yellowSyllable);
-                    const whiteIndex = syllables.indexOf(whiteSyllable);
+                if (yellowIndex >= 0 && yellowIndex < 6 && whiteIndex >= 0 && whiteIndex < 6) {
+                    const yellowSyllable = syllables[yellowIndex];
+                    const whiteSyllable = syllables[whiteIndex];
+                    const key = `${yellowSyllable}-${whiteSyllable}`;
+                    const result = hexagrams[key];
 
-                    if (yellowIndex !== -1 && whiteIndex !== -1) {
+                    if (result) {
                         // Set dice to show the syllables
                         const diceYellow = document.getElementById('diceYellow');
                         const diceWhite = document.getElementById('diceWhite');
@@ -2039,7 +2044,7 @@ const hexagramIllustrations = {
 
                         // Display the result
                         currentResult = result;
-                        displayResult(key, yellowSyllable, whiteSyllable);
+                        displayResult(key, yellowSyllable, whiteSyllable, yellowIndex, whiteIndex);
 
                         // Show "再次占卜" button
                         document.getElementById('rollAgainBtn').style.display = 'inline-block';
