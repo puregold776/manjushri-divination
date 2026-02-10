@@ -241,6 +241,87 @@
             border-color: var(--light-gold);
         }
 
+        /* Manual input section */
+        .manual-input-section {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            padding: 30px;
+            background: rgba(45, 12, 17, 0.7);
+            border-radius: 15px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: none;
+        }
+
+        .manual-input-section.show {
+            display: block;
+        }
+
+        .manual-input-title {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.4em;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .syllable-selector {
+            margin-bottom: 25px;
+        }
+
+        .syllable-label {
+            color: var(--light-gold);
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .syllable-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 12px;
+        }
+
+        .syllable-btn {
+            padding: 15px;
+            background: rgba(92, 26, 27, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.5em;
+            font-family: 'Noto Serif Tibetan', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .syllable-btn:hover {
+            border-color: var(--gold);
+            background: rgba(92, 26, 27, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .syllable-btn.selected {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--light-gold) 100%);
+            color: var(--dark-maroon);
+            border-color: var(--light-gold);
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.5);
+        }
+
+        .syllable-btn.yellow-selected {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: var(--dark-maroon);
+            border-color: #FFD700;
+        }
+
+        .syllable-btn.white-selected {
+            background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+            color: var(--dark-maroon);
+            border-color: #FFFFFF;
+        }
+
         /* Result section */
         .result-section {
             display: none;
@@ -622,7 +703,42 @@
 
         <div class="button-group">
             <button id="rollBtn" onclick="rollDice()">🎲 擲骰占卜</button>
+            <button class="button-secondary" id="manualBtn" onclick="toggleManualMode()">✋ 手動設定卦象</button>
         </div>
+
+        <!-- Manual Input Section -->
+        <section class="manual-input-section" id="manualInputSection">
+            <div class="manual-input-title">手動設定卦象</div>
+
+            <div class="syllable-selector">
+                <label class="syllable-label">佛父 (黃色骰子)：</label>
+                <div class="syllable-options" id="yellowOptions">
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 0)">ཨ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 1)">དྷཱིཿ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 2)">ར</button>
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 3)">ཙ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 4)">ན</button>
+                    <button class="syllable-btn" onclick="selectSyllable('yellow', 5)">པ</button>
+                </div>
+            </div>
+
+            <div class="syllable-selector">
+                <label class="syllable-label">佛母 (白色骰子)：</label>
+                <div class="syllable-options" id="whiteOptions">
+                    <button class="syllable-btn" onclick="selectSyllable('white', 0)">ཨ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('white', 1)">དྷཱིཿ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('white', 2)">ར</button>
+                    <button class="syllable-btn" onclick="selectSyllable('white', 3)">ཙ</button>
+                    <button class="syllable-btn" onclick="selectSyllable('white', 4)">ན</button>
+                    <button class="syllable-btn" onclick="selectSyllable('white', 5)">པ</button>
+                </div>
+            </div>
+
+            <div class="button-group" style="margin-top: 30px;">
+                <button id="confirmManualBtn" onclick="confirmManualSelection()" disabled>確認卦象</button>
+                <button class="button-secondary" onclick="toggleManualMode()">返回擲骰</button>
+            </div>
+        </section>
 
         <section class="dice-section">
             <div>
@@ -1449,6 +1565,97 @@ const hexagramIllustrations = {
             4: [-90, 0],     // ན → top face → rotateX(-90)
             5: [0, 180]      // དྷཱིཿ → back face → rotateY(180)
         };
+
+        // Manual selection state
+        let manualMode = false;
+        let selectedYellow = null;
+        let selectedWhite = null;
+
+        function toggleManualMode() {
+            manualMode = !manualMode;
+            const manualSection = document.getElementById('manualInputSection');
+            const diceSection = document.querySelector('.dice-section');
+
+            if (manualMode) {
+                manualSection.classList.add('show');
+                diceSection.style.display = 'none';
+                document.getElementById('rollBtn').style.display = 'none';
+                document.getElementById('rollAgainBtn').style.display = 'none';
+                document.getElementById('resultSection').classList.remove('show');
+
+                // Reset selections
+                selectedYellow = null;
+                selectedWhite = null;
+                document.querySelectorAll('.syllable-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'yellow-selected', 'white-selected');
+                });
+                document.getElementById('confirmManualBtn').disabled = true;
+            } else {
+                manualSection.classList.remove('show');
+                diceSection.style.display = 'flex';
+                document.getElementById('rollBtn').style.display = 'inline-block';
+            }
+        }
+
+        function selectSyllable(color, index) {
+            if (color === 'yellow') {
+                selectedYellow = index;
+                // Update UI
+                document.querySelectorAll('#yellowOptions .syllable-btn').forEach((btn, i) => {
+                    btn.classList.remove('selected', 'yellow-selected');
+                    if (i === index) {
+                        btn.classList.add('selected', 'yellow-selected');
+                    }
+                });
+            } else {
+                selectedWhite = index;
+                // Update UI
+                document.querySelectorAll('#whiteOptions .syllable-btn').forEach((btn, i) => {
+                    btn.classList.remove('selected', 'white-selected');
+                    if (i === index) {
+                        btn.classList.add('selected', 'white-selected');
+                    }
+                });
+            }
+
+            // Enable confirm button if both selected
+            document.getElementById('confirmManualBtn').disabled =
+                (selectedYellow === null || selectedWhite === null);
+        }
+
+        function confirmManualSelection() {
+            if (selectedYellow === null || selectedWhite === null) return;
+
+            // Set dice to selected positions
+            const diceYellow = document.getElementById('diceYellow');
+            const diceWhite = document.getElementById('diceWhite');
+
+            const [yTargetX, yTargetY] = faceTargetAngles[selectedYellow];
+            const [wTargetX, wTargetY] = faceTargetAngles[selectedWhite];
+
+            diceYellow.style.transform = `rotateX(${yTargetX}deg) rotateY(${yTargetY}deg)`;
+            diceWhite.style.transform = `rotateX(${wTargetX}deg) rotateY(${wTargetY}deg)`;
+
+            // Get the result
+            const yellowSyllable = syllables[selectedYellow];
+            const whiteSyllable = syllables[selectedWhite];
+            const key = `${yellowSyllable}-${whiteSyllable}`;
+
+            currentResult = hexagrams[key];
+            displayResult(key, yellowSyllable, whiteSyllable);
+
+            // Switch back to dice view
+            toggleManualMode();
+
+            // Show dice and result
+            document.querySelector('.dice-section').style.display = 'flex';
+            document.getElementById('rollAgainBtn').style.display = 'inline-block';
+
+            // Scroll to result
+            setTimeout(() => {
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
 
         function rollDice() {
             if (isRolling) return;
