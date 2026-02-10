@@ -471,18 +471,19 @@
 
         .reading-content {
             background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
+            padding: 0 15px;
             border-radius: 5px;
             margin-top: 5px;
             line-height: 1.8;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.3s ease, padding 0.3s ease;
             color: var(--text-light);
         }
 
         .reading-content.open {
-            max-height: 500px;
+            max-height: 2000px;
+            padding: 15px;
         }
 
         /* Share section */
