@@ -1795,11 +1795,10 @@ const hexagramIllustrations = {
 
             document.getElementById('resultSection').classList.add('show');
 
-            // Update URL with hexagram parameters (using numeric indices)
-            const url = new URL(window.location.href);
-            url.searchParams.set('y', yellowIndex);
-            url.searchParams.set('w', whiteIndex);
-            window.history.pushState({}, '', url);
+            // Update URL with hexagram parameters (using path format /45)
+            const pathSegment = `${yellowIndex}${whiteIndex}`;
+            const newUrl = `${window.location.origin}/${pathSegment}`;
+            window.history.pushState({}, '', newUrl);
         }
 
         function toggleReading(element) {
@@ -2029,45 +2028,64 @@ const hexagramIllustrations = {
         document.getElementById('diceYellow').style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
         document.getElementById('diceWhite').style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
 
-        // Check URL parameters on page load
+        // Check URL path on page load
         function loadFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const yellowIndexStr = urlParams.get('y');
-            const whiteIndexStr = urlParams.get('w');
+            // Get pathname, e.g., "/45" from "https://manjumo.com/45"
+            const pathname = window.location.pathname;
 
-            if (yellowIndexStr !== null && whiteIndexStr !== null) {
-                const yellowIndex = parseInt(yellowIndexStr);
-                const whiteIndex = parseInt(whiteIndexStr);
+            // Try to parse path format first (e.g., /45)
+            const pathMatch = pathname.match(/^\/(\d)(\d)$/);
 
-                if (yellowIndex >= 0 && yellowIndex < 6 && whiteIndex >= 0 && whiteIndex < 6) {
-                    const yellowSyllable = syllables[yellowIndex];
-                    const whiteSyllable = syllables[whiteIndex];
-                    const key = `${yellowSyllable}-${whiteSyllable}`;
-                    const result = hexagrams[key];
+            let yellowIndex = null;
+            let whiteIndex = null;
 
-                    if (result) {
-                        // Set dice to show the syllables
-                        const diceYellow = document.getElementById('diceYellow');
-                        const diceWhite = document.getElementById('diceWhite');
+            if (pathMatch) {
+                // Path format: /45
+                yellowIndex = parseInt(pathMatch[1]);
+                whiteIndex = parseInt(pathMatch[2]);
+            } else {
+                // Fallback to query parameter format for backwards compatibility
+                const urlParams = new URLSearchParams(window.location.search);
+                const yellowIndexStr = urlParams.get('y');
+                const whiteIndexStr = urlParams.get('w');
 
-                        const [yTargetX, yTargetY] = faceTargetAngles[yellowIndex];
-                        const [wTargetX, wTargetY] = faceTargetAngles[whiteIndex];
+                if (yellowIndexStr !== null && whiteIndexStr !== null) {
+                    yellowIndex = parseInt(yellowIndexStr);
+                    whiteIndex = parseInt(whiteIndexStr);
+                }
+            }
 
-                        diceYellow.style.transform = `rotateX(${yTargetX}deg) rotateY(${yTargetY}deg)`;
-                        diceWhite.style.transform = `rotateX(${wTargetX}deg) rotateY(${wTargetY}deg)`;
+            if (yellowIndex !== null && whiteIndex !== null &&
+                yellowIndex >= 0 && yellowIndex < 6 &&
+                whiteIndex >= 0 && whiteIndex < 6) {
 
-                        // Display the result
-                        currentResult = result;
-                        displayResult(key, yellowSyllable, whiteSyllable, yellowIndex, whiteIndex);
+                const yellowSyllable = syllables[yellowIndex];
+                const whiteSyllable = syllables[whiteIndex];
+                const key = `${yellowSyllable}-${whiteSyllable}`;
+                const result = hexagrams[key];
 
-                        // Show "再次占卜" button
-                        document.getElementById('rollAgainBtn').style.display = 'inline-block';
+                if (result) {
+                    // Set dice to show the syllables
+                    const diceYellow = document.getElementById('diceYellow');
+                    const diceWhite = document.getElementById('diceWhite');
 
-                        // Scroll to result after a short delay
-                        setTimeout(() => {
-                            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-                        }, 500);
-                    }
+                    const [yTargetX, yTargetY] = faceTargetAngles[yellowIndex];
+                    const [wTargetX, wTargetY] = faceTargetAngles[whiteIndex];
+
+                    diceYellow.style.transform = `rotateX(${yTargetX}deg) rotateY(${yTargetY}deg)`;
+                    diceWhite.style.transform = `rotateX(${wTargetX}deg) rotateY(${wTargetY}deg)`;
+
+                    // Display the result
+                    currentResult = result;
+                    displayResult(key, yellowSyllable, whiteSyllable, yellowIndex, whiteIndex);
+
+                    // Show "再次占卜" button
+                    document.getElementById('rollAgainBtn').style.display = 'inline-block';
+
+                    // Scroll to result after a short delay
+                    setTimeout(() => {
+                        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                    }, 500);
                 }
             }
         }
