@@ -796,6 +796,7 @@
             <div class="share-section">
                 <div class="share-title">分享卦象</div>
                 <div class="share-buttons">
+                    <button class="share-btn" onclick="copyShareLink()">🔗 複製分享連結</button>
                     <button class="share-btn" onclick="shareFacebook()">Facebook</button>
                     <button class="share-btn" onclick="shareLine()">LINE</button>
                     <button class="share-btn" onclick="shareWeChat()">微信</button>
@@ -1787,6 +1788,12 @@ const hexagramIllustrations = {
             readingSection.appendChild(practicesDiv);
 
             document.getElementById('resultSection').classList.add('show');
+
+            // Update URL with hexagram parameters
+            const url = new URL(window.location.href);
+            url.searchParams.set('yellow', yellowSyllable);
+            url.searchParams.set('white', whiteSyllable);
+            window.history.pushState({}, '', url);
         }
 
         function toggleReading(element) {
@@ -1795,6 +1802,15 @@ const hexagramIllustrations = {
 
             toggle.classList.toggle('open');
             content.classList.toggle('open');
+        }
+
+        function copyShareLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('✅ 分享連結已複製！他人可透過此連結查看您的卦象');
+            }).catch(() => {
+                showToast('❌ 複製失敗，請手動複製網址列的連結');
+            });
         }
 
         function shareFacebook() {
@@ -1994,6 +2010,51 @@ const hexagramIllustrations = {
         // Initialize with first face showing
         document.getElementById('diceYellow').style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
         document.getElementById('diceWhite').style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+
+        // Check URL parameters on page load
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const yellowSyllable = urlParams.get('yellow');
+            const whiteSyllable = urlParams.get('white');
+
+            if (yellowSyllable && whiteSyllable) {
+                const key = `${yellowSyllable}-${whiteSyllable}`;
+                const result = hexagrams[key];
+
+                if (result) {
+                    // Find syllable indices
+                    const yellowIndex = syllables.indexOf(yellowSyllable);
+                    const whiteIndex = syllables.indexOf(whiteSyllable);
+
+                    if (yellowIndex !== -1 && whiteIndex !== -1) {
+                        // Set dice to show the syllables
+                        const diceYellow = document.getElementById('diceYellow');
+                        const diceWhite = document.getElementById('diceWhite');
+
+                        const [yTargetX, yTargetY] = faceTargetAngles[yellowIndex];
+                        const [wTargetX, wTargetY] = faceTargetAngles[whiteIndex];
+
+                        diceYellow.style.transform = `rotateX(${yTargetX}deg) rotateY(${yTargetY}deg)`;
+                        diceWhite.style.transform = `rotateX(${wTargetX}deg) rotateY(${wTargetY}deg)`;
+
+                        // Display the result
+                        currentResult = result;
+                        displayResult(key, yellowSyllable, whiteSyllable);
+
+                        // Show "再次占卜" button
+                        document.getElementById('rollAgainBtn').style.display = 'inline-block';
+
+                        // Scroll to result after a short delay
+                        setTimeout(() => {
+                            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                        }, 500);
+                    }
+                }
+            }
+        }
+
+        // Load hexagram from URL when page loads
+        window.addEventListener('DOMContentLoaded', loadFromURL);
     </script>
 </body>
 </html>
