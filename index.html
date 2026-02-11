@@ -2116,6 +2116,7 @@
             const pathname = window.location.pathname;
 
             // Try to parse path format first (e.g., /45)
+            // Match /45 or /index.html (when coming from 404 redirect with query params)
             const pathMatch = pathname.match(/^\/(\d)(\d)$/);
 
             let yellowIndex = null;
@@ -2126,16 +2127,16 @@
                 // Convert to 0-based index
                 yellowIndex = parseInt(pathMatch[1]) - 1;
                 whiteIndex = parseInt(pathMatch[2]) - 1;
-            } else {
-                // Fallback to query parameter format for backwards compatibility
-                const urlParams = new URLSearchParams(window.location.search);
-                const yellowIndexStr = urlParams.get('y');
-                const whiteIndexStr = urlParams.get('w');
+            }
 
-                if (yellowIndexStr !== null && whiteIndexStr !== null) {
-                    yellowIndex = parseInt(yellowIndexStr);
-                    whiteIndex = parseInt(whiteIndexStr);
-                }
+            // Check query parameters (for 404 redirects or backwards compatibility)
+            const urlParams = new URLSearchParams(window.location.search);
+            const yellowIndexStr = urlParams.get('y');
+            const whiteIndexStr = urlParams.get('w');
+
+            if (yellowIndexStr !== null && whiteIndexStr !== null) {
+                yellowIndex = parseInt(yellowIndexStr);
+                whiteIndex = parseInt(whiteIndexStr);
             }
 
             if (yellowIndex !== null && whiteIndex !== null &&
