@@ -61,8 +61,7 @@
                 const imagePath = 'manjusigns/sign' + yellowNum + whiteNum + '.jpg';
 
                 // Use absolute URL for social media crawlers
-                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-                const absoluteUrl = baseUrl + imagePath;
+                const absoluteUrl = window.location.origin + '/' + imagePath;
 
                 // Update og:image meta tag
                 const ogImage = document.querySelector('meta[property="og:image"]');
@@ -2040,8 +2039,7 @@
                 const whiteNum = whiteIndex + 1;
                 const imagePath = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
                 // Use absolute URL for social media crawlers
-                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-                const absoluteUrl = baseUrl + imagePath;
+                const absoluteUrl = window.location.origin + '/' + imagePath;
                 ogImage.setAttribute('content', absoluteUrl);
             }
 
@@ -2061,8 +2059,7 @@
                 const yellowNum = yellowIndex + 1;
                 const whiteNum = whiteIndex + 1;
                 const imagePath = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
-                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-                const absoluteUrl = baseUrl + imagePath;
+                const absoluteUrl = window.location.origin + '/' + imagePath;
                 twitterImage.setAttribute('content', absoluteUrl);
             }
 
