@@ -4,13 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="文殊占卜 - 藏傳佛教骰子占卜系統。通過文殊菩薩的智慧，獲取生命方向的指引。">
+    <!-- Open Graph / Facebook / Line -->
     <meta property="og:title" content="文殊占卜 | Manjushri Divination">
     <meta property="og:description" content="藏傳佛教文殊占卜系統。使用傳統骰子占卜，尋求文殊菩薩的智慧指引。">
-    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%235C1A1B' width='512' height='512'/%3E%3Ctext x='256' y='280' font-size='120' fill='%23D4AF37' text-anchor='middle' font-family='serif'%3E༄༅%3C/text%3E%3C/svg%3E">
+    <meta property="og:image" content="manjushri-orange-backup.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="文殊占卜 | Manjushri Divination">
+    <meta name="twitter:description" content="藏傳佛教文殊占卜系統。使用傳統骰子占卜，尋求文殊菩薩的智慧指引。">
+    <meta name="twitter:image" content="manjushri-orange-backup.png">
     <title>文殊占卜 | Manjushri Divination</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="manjushri-orange.png">
+    <link rel="apple-touch-icon" href="manjushri-orange.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+Tibetan&display=swap" rel="stylesheet">
+
+    <!-- Dynamic OG Image for social sharing -->
+    <script>
+        (function() {
+            // Parse URL to get hexagram indices
+            const pathname = window.location.pathname;
+            const pathMatch = pathname.match(/^\/(\d)(\d)$/);
+
+            let yellowIndex = null;
+            let whiteIndex = null;
+
+            if (pathMatch) {
+                yellowIndex = parseInt(pathMatch[1]);
+                whiteIndex = parseInt(pathMatch[2]);
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const yStr = urlParams.get('y');
+                const wStr = urlParams.get('w');
+                if (yStr !== null && wStr !== null) {
+                    yellowIndex = parseInt(yStr);
+                    whiteIndex = parseInt(wStr);
+                }
+            }
+
+            // If we have valid hexagram indices, update OG image
+            if (yellowIndex !== null && whiteIndex !== null &&
+                yellowIndex >= 0 && yellowIndex < 6 &&
+                whiteIndex >= 0 && whiteIndex < 6) {
+
+                const yellowNum = yellowIndex + 1;
+                const whiteNum = whiteIndex + 1;
+                const imagePath = 'manjusigns/sign' + yellowNum + whiteNum + '.jpg';
+
+                // Use absolute URL for social media crawlers
+                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+                const absoluteUrl = baseUrl + imagePath;
+
+                // Update og:image meta tag
+                const ogImage = document.querySelector('meta[property="og:image"]');
+                if (ogImage) {
+                    ogImage.setAttribute('content', absoluteUrl);
+                }
+
+                // Update twitter:image meta tag
+                const twitterImage = document.querySelector('meta[name="twitter:image"]');
+                if (twitterImage) {
+                    twitterImage.setAttribute('content', absoluteUrl);
+                }
+
+                // Update og:image dimensions (卦象图是800x800)
+                const ogWidth = document.querySelector('meta[property="og:image:width"]');
+                const ogHeight = document.querySelector('meta[property="og:image:height"]');
+                if (ogWidth) ogWidth.setAttribute('content', '800');
+                if (ogHeight) ogHeight.setAttribute('content', '800');
+            }
+        })();
+    </script>
 
     <style>
         * {
@@ -678,10 +749,11 @@
             }
         }
 
-        #illustration-svg svg {
+        #illustration-svg img {
             width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -689,15 +761,38 @@
     <header>
         <h1>文殊占卜</h1>
         <div class="tibetan-title">ཨ་ར་པ་ཙ་ན་དྷཱིཿ</div>
+        <img src="manjushri-orange.png" alt="文殊菩薩法相" style="max-width: 400px; margin: 20px auto; display: block;">
         <p class="tagline">文殊菩薩智慧占卜系統</p>
     </header>
 
     <div class="container">
         <section class="intro">
             <h2>文殊占卜說明</h2>
-            <p>文殊占卜是藏傳佛教傳統的骰子占卜系統，源自於<span class="instruction-highlight">全知麥彭仁波切</span>的法教。依靠明咒王 <span style="font-family:'Noto Serif Tibetan',serif;">ཨ་ར་པ་ཙ་ན་དྷཱིཿ</span> 觀察取捨。</p>
+            <p>文殊占卜是藏傳佛教傳統的占筮法，源自於<span class="instruction-highlight">全知麥彭仁波切</span>的法教，依靠文殊菩薩心咒觀察得失取捨。</p>
             <p>兩枚骰子各有六面，分別刻有文殊菩薩心咒六字。黃色骰子代表<span class="instruction-highlight">佛父</span>，白色骰子代表<span class="instruction-highlight">佛母</span>，共可得 36 種卦象。</p>
             <p><span class="instruction-highlight">請先靜心片刻，觀想文殊菩薩，默念心咒三遍或七遍，再專注於心中所問之事，然後點擊「擲骰占卜」。</span></p>
+        </section>
+
+        <section class="intro">
+            <h2>文殊占卜儀軌</h2>
+            <p>首先觀想前方虛空當中，蓮花月墊之上，文殊菩薩呈圓滿報身裝飾，雙足結跏趺坐勢，身色紅黃，一面二臂，右手持寶劍，左手拈烏巴拉花，花蕊之上為般若經函。並了知彼等一切顯現均如水月般現而無自性。如此明觀後，誠摯祈禱，並念誦下文：</p>
+            <p style="text-align: center; line-height: 1.8; font-weight: bold; font-size: 1.3em;">
+                嗡<br>
+                三時恆常無遮智慧眼<br>
+                祈請文殊勇士垂念我<br>
+                三寶三根緣起無欺故<br>
+                以真實力願令取捨明
+            </p>
+            <p>之後念誦<span class="instruction-highlight">緣起咒 3 遍或 7 遍</span>：</p>
+            <p style="text-align: center; font-size: 1.3em; line-height: 1.8; font-weight: bold;">
+                嗡 耶達<sub>爾</sub>瑪 黑杜札巴瓦 黑敦迭肯 大他嘎多 哈雅瓦迭<sub>的</sub> 迭肯匝友 尼若達 誒旺巴迪 瑪哈夏<sub>日</sub>瑪那耶 梭哈
+            </p>
+            <p>其後盡力念誦<span class="instruction-highlight">文殊菩薩心咒</span>，並虔誠祈禱：</p>
+            <p style="text-align: center; font-size: 1.3em; color: var(--gold); margin: 20px 0; font-weight: bold;">
+                嗡 阿日<sub>阿</sub>巴雜那 諦
+            </p>
+            <p>此時，觀想自己前方虛空中，文殊菩薩與眾眷金光燦爛，真實降臨。</p>
+            <p>心中憶念所占之事並猛厲祈禱，然後扔出骰子，結果之吉凶定可通過骰子明示。</p>
         </section>
 
         <div style="text-align:center; color:var(--gold); font-size:1.6em; letter-spacing:12px; margin-bottom:30px; opacity:0.6;">✦ ༄ ✦</div>
@@ -787,7 +882,7 @@
                 <div class="verse" id="verse"></div>
 
                 <div id="illustration-container" style="display:flex;justify-content:center;margin:1.5rem 0;">
-                    <div id="illustration-svg" style="width:180px;height:180px;"></div>
+                    <div id="illustration-svg" style="width:100%;max-width:600px;height:auto;"></div>
                 </div>
 
                 <div class="reading-section" id="readingSection"></div>
@@ -802,62 +897,22 @@
                     <button class="share-btn" onclick="shareThreads()">Threads</button>
                     <button class="share-btn" onclick="shareTwitter()">X (Twitter)</button>
                     <button class="share-btn" onclick="shareWeChat()">微信</button>
-                    <button class="share-btn" onclick="shareImage()">📷 下載圖片</button>
                     <button class="share-btn" onclick="shareWeb()">更多分享</button>
                 </div>
             </div>
 
             <div style="background:rgba(92,26,27,0.5); border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:20px; margin-top:20px; font-size:0.9em; color:var(--text-light); line-height:1.8; text-align:center;">
                 <p style="color:var(--light-gold); font-weight:500; margin-bottom:8px;">覆卦規則</p>
-                <p>對重大問題可再次占問。若兩次得出相同卦象，答案便很肯定。若佛父佛母兩次結果顛倒，則應再次觀想、持咒後重新占問。除重大事宜外，普通情況觀察一次足矣。</p>
+                <p>對重大問題可再次占問。首先如前實施一次，再結合現境進行觀察。善妙的究竟善妙，不祥的終究不祥。</p>
+                <p>若兩次得出相同卦象，答案便很肯定。若佛父佛母兩次結果顛倒，則應再次觀想、持咒後重新占問。</p>
+                <p>除重大事宜外，普通情況觀察一次足矣。</p>
             </div>
         </section>
     </div>
-    <script>
-const hexagramIllustrations = {
-    'ཨ-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="60" stroke="#D4AF37" fill="none" stroke-width="2.5"/><line x1="168.0" y1="100.0" x2="188.0" y2="100.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="158.88972745734185" y1="134.0" x2="176.2102355330306" y2="144.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="134.0" y1="158.88972745734182" x2="144.0" y2="176.21023553303058" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="100.0" y1="168.0" x2="100.0" y2="188.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="66.00000000000001" y1="158.88972745734185" x2="56.00000000000002" y2="176.2102355330306" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="41.110272542658166" y1="134.0" x2="23.789764466969388" y2="144.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="32.0" y1="100.00000000000001" x2="12.0" y2="100.00000000000001" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="41.11027254265817" y1="66.0" x2="23.7897644669694" y2="55.99999999999999" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="65.99999999999997" y1="41.110272542658194" x2="55.99999999999996" y2="23.789764466969416" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="99.99999999999999" y1="32.0" x2="99.99999999999999" y2="12.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="134.0" y1="41.11027254265817" x2="144.0" y2="23.7897644669694" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><line x1="158.8897274573418" y1="65.99999999999997" x2="176.21023553303058" y2="55.99999999999996" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><path d="M 25,35 Q 35,28 45,35 Q 55,28 60,35" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 140,35 Q 150,28 160,35 Q 170,28 175,35" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 25,165 Q 35,158 45,165 Q 55,158 60,165" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 140,165 Q 150,158 160,165 Q 170,158 175,165" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><circle cx="100" cy="100" r="40" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.3"/><circle cx="100" cy="100" r="20" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.15"/><circle cx="175.0" cy="100.0" r="1.5" fill="#B8860B"/><circle cx="172.44443697168012" cy="119.41142838268905" r="1.5" fill="#B8860B"/><circle cx="164.9519052838329" cy="137.5" r="1.5" fill="#B8860B"/><circle cx="153.03300858899107" cy="153.03300858899107" r="1.5" fill="#B8860B"/><circle cx="137.5" cy="164.9519052838329" r="1.5" fill="#B8860B"/><circle cx="119.41142838268905" cy="172.44443697168012" r="1.5" fill="#B8860B"/><circle cx="100.0" cy="175.0" r="1.5" fill="#B8860B"/><circle cx="80.58857161731093" cy="172.44443697168012" r="1.5" fill="#B8860B"/><circle cx="62.500000000000014" cy="164.9519052838329" r="1.5" fill="#B8860B"/><circle cx="46.96699141100894" cy="153.03300858899107" r="1.5" fill="#B8860B"/><circle cx="35.0480947161671" cy="137.5" r="1.5" fill="#B8860B"/><circle cx="27.55556302831988" cy="119.41142838268908" r="1.5" fill="#B8860B"/><circle cx="25.0" cy="100.00000000000001" r="1.5" fill="#B8860B"/><circle cx="27.55556302831988" cy="80.58857161731095" r="1.5" fill="#B8860B"/><circle cx="35.0480947161671" cy="62.49999999999999" r="1.5" fill="#B8860B"/><circle cx="46.96699141100893" cy="46.96699141100894" r="1.5" fill="#B8860B"/><circle cx="62.499999999999964" cy="35.04809471616713" r="1.5" fill="#B8860B"/><circle cx="80.58857161731095" cy="27.55556302831988" r="1.5" fill="#B8860B"/><circle cx="99.99999999999999" cy="25.0" r="1.5" fill="#B8860B"/><circle cx="119.41142838268902" cy="27.555563028319867" r="1.5" fill="#B8860B"/><circle cx="137.5" cy="35.0480947161671" r="1.5" fill="#B8860B"/><circle cx="153.03300858899104" cy="46.96699141100893" r="1.5" fill="#B8860B"/><circle cx="164.95190528383287" cy="62.499999999999964" r="1.5" fill="#B8860B"/><circle cx="172.44443697168012" cy="80.58857161731095" r="1.5" fill="#B8860B"/></svg>',
-    'ཨ-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="30" stroke="#D4AF37" fill="#D4AF3733" stroke-width="2.5"/><circle cx="100" cy="100" r="22" stroke="#F5D061" fill="#F5D06122" stroke-width="1.5"/><circle cx="100" cy="100" r="12" stroke="#D4AF37" fill="#F5D06144" stroke-width="0"/><line x1="134.0" y1="100.0" x2="170.0" y2="100.0" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="131.41190410538374" y1="113.01123670041305" x2="150.81337428812077" y2="121.04758878007993" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="124.04163056034261" y1="124.04163056034261" x2="149.49747468305833" y2="149.49747468305833" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="113.01123670041305" y1="131.41190410538374" x2="121.04758878007993" y2="150.81337428812077" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="100.0" y1="134.0" x2="100.0" y2="170.0" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="86.98876329958695" y1="131.41190410538374" x2="78.95241121992007" y2="150.81337428812077" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="75.95836943965739" y1="124.04163056034261" x2="50.50252531694168" y2="149.49747468305833" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="68.58809589461626" y1="113.01123670041305" x2="49.18662571187923" y2="121.04758878007995" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="66.0" y1="100.0" x2="30.0" y2="100.00000000000001" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="68.58809589461625" y1="86.98876329958695" x2="49.18662571187922" y2="78.95241121992007" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="75.95836943965737" y1="75.95836943965739" x2="50.502525316941664" y2="50.50252531694168" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="86.98876329958696" y1="68.58809589461625" x2="78.95241121992008" y2="49.18662571187922" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="100.0" y1="66.0" x2="99.99999999999999" y2="30.0" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="113.01123670041306" y1="68.58809589461626" x2="121.04758878007995" y2="49.18662571187924" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="124.04163056034261" y1="75.95836943965737" x2="149.49747468305833" y2="50.502525316941664" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="131.41190410538374" y1="86.98876329958695" x2="150.81337428812077" y2="78.95241121992007" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><path d="M 163.3,90.4 Q 172.0,100.0 163.3,109.6" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 151.5,138.0 Q 150.9,150.9 138.0,151.5" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 109.6,163.3 Q 100.0,172.0 90.4,163.3" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 62.0,151.5 Q 49.1,150.9 48.5,138.0" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 36.7,109.6 Q 28.0,100.0 36.7,90.4" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 48.5,62.0 Q 49.1,49.1 62.0,48.5" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 90.4,36.7 Q 100.0,28.0 109.6,36.7" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 138.0,48.5 Q 150.9,49.1 151.5,62.0" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="100" r="80" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.2"/></svg>',
-    'ཨ-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="95" r="55" stroke="#F5D061" fill="none" stroke-width="1" opacity="0.1"/><circle cx="100" cy="95" r="45" stroke="#F5D061" fill="none" stroke-width="1" opacity="0.15"/><circle cx="100" cy="95" r="35" stroke="#D4AF37" fill="#D4AF3722" stroke-width="2.5"/><circle cx="88" cy="85" r="6" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.3"/><circle cx="108" cy="100" r="4" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.25"/><circle cx="95" cy="108" r="3" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.2"/><path d="M 30,145 Q 50,135 70,145 Q 90,135 110,145 Q 130,135 150,145 Q 170,135 180,145" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 40,158 Q 60,148 80,158 Q 100,148 120,158 Q 140,148 160,158" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"/><circle cx="45" cy="50" r="2" fill="#D4AF37"/><line x1="41" y1="50" x2="49" y2="50" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="45" y1="46" x2="45" y2="54" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><circle cx="155" cy="45" r="2" fill="#D4AF37"/><line x1="151" y1="45" x2="159" y2="45" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="155" y1="41" x2="155" y2="49" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><circle cx="35" cy="110" r="2" fill="#D4AF37"/><line x1="31" y1="110" x2="39" y2="110" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="35" y1="106" x2="35" y2="114" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><circle cx="165" cy="100" r="2" fill="#D4AF37"/><line x1="161" y1="100" x2="169" y2="100" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="165" y1="96" x2="165" y2="104" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><circle cx="60" cy="30" r="2" fill="#D4AF37"/><line x1="56" y1="30" x2="64" y2="30" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="60" y1="26" x2="60" y2="34" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><circle cx="140" cy="30" r="2" fill="#D4AF37"/><line x1="136" y1="30" x2="144" y2="30" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/><line x1="140" y1="26" x2="140" y2="34" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/></svg>',
-    'ཨ-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><line x1="110.39230484541326" y1="66.0" x2="89.60769515458674" y2="54.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="100.0" y1="72.0" x2="100.0" y2="48.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="89.60769515458674" y1="66.0" x2="110.39230484541326" y2="53.99999999999999" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="60" r="1.5" fill="#F5D061"/><line x1="61.92820323027551" y1="94.0" x2="48.07179676972449" y2="86.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="55.0" y1="98.0" x2="55.0" y2="82.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="48.07179676972449" y1="94.0" x2="61.92820323027551" y2="86.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="55" cy="90" r="1.5" fill="#F5D061"/><line x1="152.79422863405995" y1="89.5" x2="137.20577136594005" y2="80.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="145.0" y1="94.0" x2="145.0" y2="76.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="137.20577136594005" y1="89.5" x2="152.79422863405995" y2="80.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="145" cy="85" r="1.5" fill="#F5D061"/><line x1="81.06217782649107" y1="143.5" x2="68.93782217350893" y2="136.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="75.0" y1="147.0" x2="75.0" y2="133.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="68.93782217350893" y1="143.5" x2="81.06217782649107" y2="136.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="75" cy="140" r="1.5" fill="#F5D061"/><line x1="136.9282032302755" y1="149.0" x2="123.07179676972449" y2="141.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="130.0" y1="153.0" x2="130.0" y2="137.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="123.07179676972449" y1="149.0" x2="136.9282032302755" y2="141.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="130" cy="145" r="1.5" fill="#F5D061"/><line x1="45.19615242270663" y1="53.0" x2="34.80384757729337" y2="47.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="40.0" y1="56.0" x2="40.0" y2="44.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="34.80384757729337" y1="53.0" x2="45.19615242270663" y2="47.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="40" cy="50" r="1.5" fill="#F5D061"/><line x1="165.19615242270663" y1="53.0" x2="154.80384757729337" y2="47.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="160.0" y1="56.0" x2="160.0" y2="44.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="154.80384757729337" y1="53.0" x2="165.19615242270663" y2="47.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="160" cy="50" r="1.5" fill="#F5D061"/><line x1="108.66025403784438" y1="115.0" x2="91.33974596215562" y2="105.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="100.0" y1="120.0" x2="100.0" y2="100.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="91.33974596215562" y1="115.0" x2="108.66025403784438" y2="105.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="110" r="1.5" fill="#F5D061"/><line x1="54.33012701892219" y1="162.5" x2="45.66987298107781" y2="157.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="50.0" y1="165.0" x2="50.0" y2="155.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="45.66987298107781" y1="162.5" x2="54.33012701892219" y2="157.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="50" cy="160" r="1.5" fill="#F5D061"/><line x1="159.33012701892218" y1="162.5" x2="150.66987298107782" y2="157.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="155.0" y1="165.0" x2="155.0" y2="155.0" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="150.66987298107782" y1="162.5" x2="159.33012701892218" y2="157.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><circle cx="155" cy="160" r="1.5" fill="#F5D061"/><line x1="100" y1="60" x2="55" y2="90" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/><line x1="100" y1="60" x2="145" y2="85" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/><line x1="55" y1="90" x2="75" y2="140" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/><line x1="145" y1="85" x2="130" y2="145" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/><line x1="100" y1="60" x2="100" y2="110" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/><circle cx="30" cy="30" r="1" fill="#D4AF37"/><circle cx="170" cy="30" r="1" fill="#D4AF37"/><circle cx="25" cy="130" r="1" fill="#D4AF37"/><circle cx="175" cy="130" r="1" fill="#D4AF37"/><circle cx="90" cy="25" r="1" fill="#D4AF37"/><circle cx="110" cy="180" r="1" fill="#D4AF37"/></svg>',
-    'ཨ-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 10,120 L 50,60 L 80,95 L 120,50 L 160,90 L 190,65 L 200,120" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 0,145 Q 50,120 100,140 Q 150,120 200,145" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="160" x2="200" y2="160" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="165" x2="200" y2="165" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="10" y1="170" x2="190" y2="170" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.2"/><line x1="10" y1="175" x2="190" y2="175" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.2"/><line x1="10" y1="180" x2="190" y2="180" stroke="#D4AF37" stroke-width="0.8" stroke-linecap="round" opacity="0.2"/><line x1="30" y1="160" x2="30" y2="152" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.5"/><line x1="30" y1="155" x2="26" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="30" y1="155" x2="34" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="60" y1="160" x2="60" y2="152" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.5"/><line x1="60" y1="155" x2="56" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="60" y1="155" x2="64" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="100" y1="160" x2="100" y2="152" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.5"/><line x1="100" y1="155" x2="96" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="100" y1="155" x2="104" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="140" y1="160" x2="140" y2="152" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.5"/><line x1="140" y1="155" x2="136" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="140" y1="155" x2="144" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="170" y1="160" x2="170" y2="152" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.5"/><line x1="170" y1="155" x2="166" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><line x1="170" y1="155" x2="174" y2="150" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/><circle cx="120" cy="50" r="15" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1" opacity="0.4"/><circle cx="40" cy="170" r="2.5" fill="#B8860B"/><circle cx="90" cy="175" r="2.5" fill="#B8860B"/><circle cx="150" cy="172" r="2.5" fill="#B8860B"/><circle cx="120" cy="168" r="2.5" fill="#B8860B"/></svg>',
-    'ཨ-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="45" x2="100" y2="155" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="100" r="10" stroke="#D4AF37" fill="#F5D06133" stroke-width="2"/><path d="M 100,45 L 100,30" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,50 Q 85,40 80,30" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,50 Q 115,40 120,30" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,48 Q 90,42 88,35" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,48 Q 110,42 112,35" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,155 L 100,170" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,150 Q 85,160 80,170" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,150 Q 115,160 120,170" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,152 Q 90,158 88,165" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,152 Q 110,158 112,165" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 82,55 Q 90,60 100,55 Q 110,60 118,55" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 82,145 Q 90,140 100,145 Q 110,140 118,145" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 75,100 Q 75,90.0 100,75" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 125,100 Q 125,90.0 100,75" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 75,100 Q 75,110.0 100,125" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 125,100 Q 125,110.0 100,125" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 65,100 Q 65,86.0 100,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/><path d="M 135,100 Q 135,86.0 100,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/><path d="M 65,100 Q 65,114.0 100,135" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/><path d="M 135,100 Q 135,114.0 100,135" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/><path d="M 55,100 Q 55,82.0 100,55" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/><path d="M 145,100 Q 145,82.0 100,55" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/><path d="M 55,100 Q 55,118.0 100,145" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/><path d="M 145,100 Q 145,118.0 100,145" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/></svg>',
-    'ར-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 65,160 L 135,160" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,160 L 75,145 L 125,145 L 130,160" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 75,145 Q 75,120 85,115 L 115,115 Q 125,120 125,145" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="85" y1="118" x2="115" y2="118" stroke="#F5D061" stroke-width="1" stroke-linecap="round"/><line x1="100" y1="118" x2="100" y2="95" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><path d="M 100,95 Q 92,80 100,55 Q 108,80 100,95" stroke="#F5D061" fill="#F5D06133" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,92 Q 96,82 100,65 Q 104,82 100,92" stroke="#F5D061" fill="#F5D06144" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="75" r="30" stroke="#F5D061" fill="none" stroke-width="1" opacity="0.2"/><circle cx="100" cy="75" r="45" stroke="#F5D061" fill="none" stroke-width="0.8" opacity="0.1"/><line x1="132.0" y1="75.0" x2="142.0" y2="75.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="122.62741699796952" y1="97.62741699796952" x2="129.698484809835" y2="104.698484809835" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="100.0" y1="107.0" x2="100.0" y2="117.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="77.37258300203048" y1="97.62741699796952" x2="70.301515190165" y2="104.698484809835" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="68.0" y1="75.0" x2="58.0" y2="75.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="77.37258300203047" y1="52.37258300203048" x2="70.30151519016499" y2="45.301515190165006" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="100.0" y1="43.0" x2="99.99999999999999" y2="33.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="122.62741699796952" y1="52.372583002030474" x2="129.69848480983498" y2="45.301515190165" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><circle cx="80" cy="152" r="1.5" fill="#B8860B"/><circle cx="90" cy="152" r="1.5" fill="#B8860B"/><circle cx="100" cy="152" r="1.5" fill="#B8860B"/><circle cx="110" cy="152" r="1.5" fill="#B8860B"/><circle cx="120" cy="152" r="1.5" fill="#B8860B"/></svg>',
-    'ར-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 80,150 L 80,110 Q 75,90 80,75 Q 85,60 100,50 Q 115,45 120,55 L 125,70 Q 128,80 120,90 L 115,100 Q 110,110 110,130 L 110,150" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 95,55 L 90,38 L 100,48" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="105" cy="72" r="5" stroke="#D4AF37" fill="#D4AF3733" stroke-width="2"/><circle cx="105" cy="72" r="2" fill="#D4AF37"/><circle cx="122" cy="85" r="3" stroke="#D4AF37" fill="none" stroke-width="1.5"/><path d="M 115,95 Q 125,100 128,108 Q 120,105 115,100" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 80,75 Q 65,65 70,50 Q 60,55 55,45 Q 65,42 68,35" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 85,65 Q 72,55 75,40 Q 68,42 62,32" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 90,55 Q 80,45 85,32 Q 78,35 75,25" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,160 Q 40,130 45,100 Q 38,80 50,55 Q 42,40 55,25" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 140,160 Q 150,130 145,100 Q 155,80 145,55 Q 155,40 140,25" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 50,170 Q 70,155 80,170 Q 90,155 100,170 Q 110,155 120,170 Q 130,155 150,170" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>',
-    'ར-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 70,100 Q 65,70 75,55 Q 85,40 100,38 Q 115,40 125,55 Q 135,70 130,100" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,100 Q 75,115 85,118 L 115,118 Q 125,115 130,100" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 80,72 Q 80,62 90,62 Q 95,62 95,72 Q 95,80 87,80 Q 80,80 80,72" stroke="#D4AF37" fill="#B8860B44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 105,72 Q 105,62 115,62 Q 120,62 120,72 Q 120,80 112,80 Q 105,80 105,72" stroke="#D4AF37" fill="#B8860B44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 96,88 L 100,95 L 104,88" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="82" y1="105" x2="82" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="88" y1="105" x2="88" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="94" y1="105" x2="94" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="100" y1="105" x2="100" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="106" y1="105" x2="106" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="112" y1="105" x2="112" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="118" y1="105" x2="118" y2="112" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="55" y1="130" x2="145" y2="165" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><line x1="145" y1="130" x2="55" y2="165" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><circle cx="55" cy="130" r="5" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5"/><circle cx="145" cy="130" r="5" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5"/><circle cx="55" cy="165" r="5" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5"/><circle cx="145" cy="165" r="5" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5"/><path d="M 55,35 Q 65,25 70,35 Q 75,20 85,30 Q 90,18 100,28 Q 110,18 115,30 Q 120,20 130,35 Q 135,25 145,35" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>',
-    'ར-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 68,65 L 72,40 L 82,55 L 92,32 L 100,50 L 108,32 L 118,55 L 128,40 L 132,65 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="45" r="4" stroke="#D4AF37" fill="#F5D061" stroke-width="1"/><line x1="68" y1="65" x2="132" y2="65" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><path d="M 70,65 Q 65,90 70,110 Q 80,130 100,135 Q 120,130 130,110 Q 135,90 130,65" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 60,65 Q 50,80 48,100 Q 50,120 60,130" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 140,65 Q 150,80 152,100 Q 150,120 140,130" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,72 Q 42,85 42,105 Q 45,115 55,125" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 145,72 Q 158,85 158,105 Q 155,115 145,125" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 78,88 Q 85,84 92,88" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 108,88 Q 115,84 122,88" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="90" r="2.5" fill="#D4AF37"/><circle cx="115" cy="90" r="2.5" fill="#D4AF37"/><path d="M 95,102 Q 100,108 105,102" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 82,115 Q 100,125 118,115" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="65" y1="150" x2="135" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" opacity="0.6"/><line x1="135" y1="150" x2="65" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>',
-    'ར-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 95,175 Q 93,140 90,120 L 88,100 Q 85,80 90,65" stroke="#D4AF37" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M 105,175 Q 107,140 108,120 L 110,100 Q 112,80 107,65" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 90,100 Q 65,85 50,60 Q 45,50 40,35" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 108,95 Q 130,80 145,55 Q 150,45 160,30" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 92,80 Q 75,65 55,55" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 106,75 Q 125,60 140,50" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,60 Q 40,55 30,50" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 65,70 Q 55,60 48,48" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 145,55 Q 155,50 165,42" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 130,65 Q 140,55 148,50" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 95,72 Q 92,60 88,50" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="88" y1="50" x2="84" y2="55" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><path d="M 130,120 Q 135,125 132,132 Q 128,128 130,120" stroke="#B8860B" fill="#D4AF3733" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="30" y1="175" x2="170" y2="175" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><path d="M 90,175 Q 75,180 60,178" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 105,175 Q 120,180 140,178" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>',
-    'ར-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 50,170 L 50,60 L 55,55 L 55,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,170 L 145,60 L 150,55 L 150,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,60 Q 100,25 150,60" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,65 Q 100,35 145,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 85,38 Q 90,25 95,35 Q 100,18 105,35 Q 110,25 115,38" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="28" r="5" stroke="#F5D061" fill="#F5D06144" stroke-width="1.5"/><path d="M 65,170 L 65,75 Q 100,55 135,75 L 135,170" stroke="#D4AF37" fill="#F5D0610A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><line x1="70" y1="90" x2="130" y2="90" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="70" y1="108" x2="130" y2="108" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="70" y1="126" x2="130" y2="126" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="70" y1="144" x2="130" y2="144" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="70" y1="162" x2="130" y2="162" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><path d="M 50,85 Q 43,77 50,69" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 150,85 Q 157,77 150,69" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 50,110 Q 43,102 50,94" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 150,110 Q 157,102 150,94" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 50,135 Q 43,127 50,119" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 150,135 Q 157,127 150,119" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><line x1="40" y1="170" x2="160" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><circle cx="100" cy="170" r="3" fill="#B8860B"/></svg>',
-    'པ-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 75,165 Q 65,145 65,120 Q 65,95 80,85 L 85,80 Q 80,75 82,70 L 85,65 Q 100,58 115,65 L 118,70 Q 120,75 115,80 L 120,85 Q 135,95 135,120 Q 135,145 125,165 Z" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 85,65 Q 100,58 115,65" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="62" rx="16" ry="5" stroke="#F5D061" fill="none" stroke-width="1.5"/><path d="M 72,130 Q 100,140 128,130" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 75,105 Q 100,115 125,105" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 95,55 L 100,40 L 105,55" stroke="#D4AF37" fill="#F5D06133" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="42" r="4" stroke="#D4AF37" fill="#F5D061" stroke-width="1"/><path d="M 92,38 Q 88,32 90,28" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 108,38 Q 112,32 110,28" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 100,42 Q 97,35 100,25" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,30 Q 94,28 92,22" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,30 Q 106,28 108,22" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 75,165 Q 80,172 90,168 Q 95,175 100,168 Q 105,175 110,168 Q 120,172 125,165" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="120" r="2" fill="#B8860B"/><circle cx="95" cy="120" r="2" fill="#B8860B"/><circle cx="105" cy="120" r="2" fill="#B8860B"/><circle cx="115" cy="120" r="2" fill="#B8860B"/></svg>',
-    'པ-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 30,100 Q 50,95 70,100 Q 90,105 110,100 Q 130,95 150,100 Q 170,105 185,100" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 45,110 Q 65,115 85,112 Q 105,115 125,112 Q 145,115 160,110" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 60,100 L 55,80 L 50,65" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,80 L 65,70" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,100 L 105,75 L 100,55 L 95,40" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 105,75 L 115,65" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 140,100 L 145,82 L 155,70" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,82 L 135,72" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,115 L 65,135 L 60,150" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 120,115 L 125,140 L 130,155" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><ellipse cx="80" cy="130" rx="15" ry="8" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.3"/><ellipse cx="130" cy="135" rx="12" ry="6" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.3"/><line x1="165" y1="105" x2="162" y2="70" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><path d="M 162,75 Q 170,68 168,60" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><line x1="30" y1="165" x2="170" y2="165" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/></svg>',
-    'པ-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 0,90 Q 25,70 50,90 Q 75,110 100,90 Q 125,70 150,90 Q 175,110 200,90" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 0,115 Q 25,95 50,115 Q 75,135 100,115 Q 125,95 150,115 Q 175,135 200,115" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 0,140 Q 25,125 50,140 Q 75,155 100,140 Q 125,125 150,140 Q 175,155 200,140" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 0,160 Q 30,152 60,160 Q 90,168 120,160 Q 150,152 180,160 Q 195,165 200,160" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 45,82 Q 50,75 55,82" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 95,82 Q 100,72 105,82" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 145,82 Q 150,75 155,82" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 60,60 Q 55,55 60,48 Q 65,55 70,48 Q 75,55 70,60 Q 65,55 60,60" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,52 L 150,42 L 155,52 Z" stroke="#D4AF37" fill="#F5D06133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="150" cy="47" r="2" fill="#F5D061"/><path d="M 40,55 Q 38,50 40,47 Q 42,50 40,55" stroke="#D4AF37" fill="#D4AF3733" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 110,48 Q 108,43 110,40 Q 112,43 110,48" stroke="#D4AF37" fill="#D4AF3733" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 170,55 Q 168,50 170,47 Q 172,50 170,55" stroke="#D4AF37" fill="#D4AF3733" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 10,175 L 190,175" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/></svg>',
-    'པ-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 0,100 Q 15,75 35,95 Q 50,120 70,85 Q 85,60 100,90 Q 115,120 130,80 Q 150,55 170,90 Q 185,115 200,85" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 0,130 Q 20,110 40,130 Q 60,150 80,120 Q 100,100 120,135 Q 140,155 160,120 Q 180,100 200,130" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,100 Q 115,95 112,85 Q 105,80 95,85 Q 88,92 95,98 Q 102,102 108,95" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,25 L 80,55 L 65,55 L 85,85" stroke="#F5D061" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 30,40 Q 40,30 55,35 Q 60,40 50,48" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 150,35 Q 160,25 170,32 Q 175,40 165,45" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><circle cx="45" cy="70" r="2" fill="#D4AF37"/><circle cx="130" cy="65" r="2" fill="#D4AF37"/><circle cx="160" cy="90" r="2" fill="#D4AF37"/><circle cx="55" cy="130" r="2" fill="#D4AF37"/><circle cx="145" cy="140" r="2" fill="#D4AF37"/><path d="M 0,160 Q 20,145 40,160 Q 50,165 60,155 Q 80,145 100,160 Q 120,170 140,155 Q 160,145 180,160 Q 195,168 200,160" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>',
-    'པ-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 92.2,76.6 Q 100.0,50.0 107.8,76.6" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 107.5,76.5 Q 131.8,63.2 118.5,87.5" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 118.4,87.2 Q 145.0,95.0 118.4,102.8" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 118.5,102.5 Q 131.8,126.8 107.5,113.5" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 107.8,113.4 Q 100.0,140.0 92.2,113.4" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 92.5,113.5 Q 68.2,126.8 81.5,102.5" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 81.6,102.8 Q 55.0,95.0 81.6,87.2" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 81.5,87.5 Q 68.2,63.2 92.5,76.5" stroke="#D4AF37" fill="#D4AF3715" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 98.7,83.1 Q 111.5,67.3 109.3,87.5" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 107.5,85.7 Q 127.7,83.5 111.9,96.3" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 111.9,93.7 Q 127.7,106.5 107.5,104.3" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 109.3,102.5 Q 111.5,122.7 98.7,106.9" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 101.3,106.9 Q 88.5,122.7 90.7,102.5" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 92.5,104.3 Q 72.3,106.5 88.1,93.7" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 88.1,96.3 Q 72.3,83.5 92.5,85.7" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 90.7,87.5 Q 88.5,67.3 101.3,83.1" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="95" r="10" stroke="#F5D061" fill="#F5D06133" stroke-width="1.5"/><circle cx="100" cy="95" r="4" stroke="#D4AF37" fill="#F5D061" stroke-width="0"/><path d="M 100,135 Q 98,150 100,170" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="145" rx="35" ry="10" stroke="#D4AF37" fill="#D4AF370A" stroke-width="1.5"/><line x1="100" y1="138" x2="100" y2="152" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><path d="M 55,155 Q 70,150 85,155" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 115,155 Q 130,150 145,155" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><circle cx="80" cy="80" r="2" fill="#F5D061"/><circle cx="120" cy="82" r="1.5" fill="#F5D061"/></svg>',
-    'པ-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 50,170 L 50,60 L 55,55 L 55,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,170 L 145,60 L 150,55 L 150,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,60 Q 100,25 150,60" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,65 Q 100,35 145,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 78,42 Q 85,34 92,42 Q 99,34 106,42 Q 113,34 120,42" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="100" y1="20" x2="100" y2="34" stroke="#F5D061" stroke-width="1.5" stroke-linecap="round"/><line x1="93" y1="24" x2="107" y2="30" stroke="#F5D061" stroke-width="1.5" stroke-linecap="round"/><line x1="107" y1="24" x2="93" y2="30" stroke="#F5D061" stroke-width="1.5" stroke-linecap="round"/><path d="M 65,170 L 65,75 Q 100,55 135,75 L 135,170" stroke="#D4AF37" fill="#F5D0610A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 48,85 Q 42,79 48,73" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 152,85 Q 158,79 152,73" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 48,110 Q 42,104 48,98" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 152,110 Q 158,104 152,98" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 48,135 Q 42,129 48,123" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 152,135 Q 158,129 152,123" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><line x1="72" y1="95" x2="128" y2="95" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="72" y1="113" x2="128" y2="113" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="72" y1="131" x2="128" y2="131" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="72" y1="149" x2="128" y2="149" stroke="#F5D061" stroke-width="0.8" stroke-linecap="round" opacity="0.15"/><line x1="40" y1="170" x2="160" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><circle cx="100" cy="170" r="3" fill="#B8860B"/></svg>',
-    'ཙ-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="170" x2="100" y2="75" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><circle cx="100" cy="172" r="4" stroke="#D4AF37" fill="#D4AF3733" stroke-width="1.5"/><path d="M 40,80 Q 40,45 100,35 Q 160,45 160,80" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,78 Q 50,50 100,42 Q 150,50 150,78" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 95,35 L 100,22 L 105,35" stroke="#D4AF37" fill="#F5D06133" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="24" r="3" stroke="#D4AF37" fill="#F5D061" stroke-width="1"/><path d="M 40,80 Q 45,88 55,82 Q 65,90 75,82 Q 85,90 95,82 Q 105,90 115,82 Q 125,90 135,82 Q 145,90 155,82 Q 160,88 160,80" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="50" y1="84" x2="50" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="50" cy="102" r="2" fill="#B8860B"/><line x1="70" y1="84" x2="70" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="70" cy="102" r="2" fill="#B8860B"/><line x1="90" y1="84" x2="90" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="90" cy="102" r="2" fill="#B8860B"/><line x1="110" y1="84" x2="110" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="110" cy="102" r="2" fill="#B8860B"/><line x1="130" y1="84" x2="130" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="130" cy="102" r="2" fill="#B8860B"/><line x1="150" y1="84" x2="150" y2="100" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.5"/><circle cx="150" cy="102" r="2" fill="#B8860B"/><path d="M 100,38 Q 40.0,55 76.0,80" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 100,38 Q 55.0,55 112.0,80" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 100,38 Q 70.0,55 148.0,80" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 100,38 Q 85.0,55 184.0,80" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 100,38 Q 100.0,55 220.0,80" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 55,60 Q 100,52 145,60" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/></svg>',
-    'ཙ-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 60,160 L 100,100 L 140,40" stroke="#D4AF37" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M 138,42 L 145,35 L 142,48" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="92" y1="108" x2="108" y2="92" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><path d="M 65,155 Q 70,150 75,155" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 70,150 Q 75,145 80,150" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 140,160 L 100,100 L 60,40" stroke="#F5D061" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,42 L 60,40 L 60,30" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,38 L 60,40" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,38 L 60,40" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 115,65 Q 120,58 118,50" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 125,55 Q 130,48 128,40" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 108,75 Q 115,70 112,60" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 80,80 Q 100,65 120,80 Q 120,110 100,120 Q 80,110 80,80" stroke="#D4AF37" fill="#D4AF370A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><circle cx="100" cy="100" r="4" fill="#F5D061"/></svg>',
-    'ཙ-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 20,70 Q 60,50 100,70 Q 140,90 180,60" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 10,100 Q 50,80 100,100 Q 150,120 190,90" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 20,130 Q 60,110 100,130 Q 140,150 180,120" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 75,55 L 75,35 L 95,35 L 95,50 L 90,48 L 88,55 L 85,52 L 82,58" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 130,50 Q 135,45 140,50 Q 135,55 130,50" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 155,75 Q 160,70 165,75 Q 160,80 155,75" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 40,125 Q 45,120 50,125 Q 45,130 40,125" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="100" cy="100" r="25" stroke="#D4AF37" fill="none" stroke-width="1.5" opacity="0.25"/><circle cx="110" cy="95" r="2.0" fill="#D4AF37"/><circle cx="120" cy="92" r="1.6" fill="#D4AF37"/><circle cx="132" cy="90" r="1.2" fill="#D4AF37"/><circle cx="145" cy="88" r="0.7999999999999998" fill="#D4AF37"/><path d="M 0,170 Q 50,155 100,165 Q 150,175 200,160" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/></svg>',
-    'ཙ-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 20,50 Q 60,35 100,45 Q 140,55 180,40" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 24,42.0 Q 40,59.0 24,77.0 L 46,77.0 Q 30,59.0 46,42.0 Z" stroke="#F5D061" fill="#F5D0611A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><path d="M 54,46.66019542983613 Q 60,63.66019542983613 54,81.66019542983614 L 76,81.66019542983614 Q 70,63.66019542983613 76,46.66019542983613 Z" stroke="#D4AF37" fill="#D4AF371A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M 89,45.377315902755754 Q 105,62.377315902755754 89,80.37731590275575 L 111,80.37731590275575 Q 95,62.377315902755754 111,45.377315902755754 Z" stroke="#F5D061" fill="#F5D0611A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><path d="M 124,39.78739778352574 Q 130,56.78739778352574 124,74.78739778352573 L 146,74.78739778352573 Q 140,56.78739778352574 146,39.78739778352574 Z" stroke="#D4AF37" fill="#D4AF371A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M 154,37.0191769558208 Q 170,54.0191769558208 154,72.0191769558208 L 176,72.0191769558208 Q 160,54.0191769558208 176,37.0191769558208 Z" stroke="#F5D061" fill="#F5D0611A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><line x1="30" y1="77.0" x2="28" y2="87.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="35" y1="77.0" x2="35" y2="89.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="40" y1="77.0" x2="42" y2="87.0" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="60" y1="81.66019542983614" x2="58" y2="91.66019542983614" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="65" y1="81.66019542983614" x2="65" y2="93.66019542983614" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="70" y1="81.66019542983614" x2="72" y2="91.66019542983614" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="95" y1="80.37731590275575" x2="93" y2="90.37731590275575" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="100" y1="80.37731590275575" x2="100" y2="92.37731590275575" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="105" y1="80.37731590275575" x2="107" y2="90.37731590275575" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="130" y1="74.78739778352573" x2="128" y2="84.78739778352573" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="135" y1="74.78739778352573" x2="135" y2="86.78739778352573" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="140" y1="74.78739778352573" x2="142" y2="84.78739778352573" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="160" y1="72.0191769558208" x2="158" y2="82.0191769558208" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="165" y1="72.0191769558208" x2="165" y2="84.0191769558208" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><line x1="170" y1="72.0191769558208" x2="172" y2="82.0191769558208" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.4"/><path d="M 0,160 L 40,120 L 70,145 L 100,110 L 130,140 L 160,115 L 200,155" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><line x1="0" y1="175" x2="200" y2="175" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.2"/><path d="M 10,90 Q 30,85 50,90" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 150,95 Q 170,88 190,92" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/></svg>',
-    'ཙ-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 90,170 L 88,130 L 85,100 Q 83,85 88,75" stroke="#D4AF37" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M 110,170 L 108,130 L 107,100 Q 110,85 108,75" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 88,75 L 85,68 L 92,72 L 90,60 L 98,70 L 100,58 L 105,70 L 108,60 L 106,72 L 112,68 L 108,75" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 130,90 L 145,70 L 160,55" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 145,70 Q 155,60 160,50" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 145,70 Q 150,75 160,72" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 20,30 Q 35,18 55,25 Q 70,15 90,25 Q 105,15 120,25 Q 140,15 155,25 Q 170,18 185,30" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 30,40 Q 50,30 70,38 Q 90,28 110,38 Q 130,28 150,38 Q 165,30 180,40" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/><path d="M 60,30 L 65,48 L 55,50 L 68,70" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 60,170 Q 55,165 60,160" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 140,170 Q 145,162 148,168" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/></svg>',
-    'ཙ-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 50,170 L 50,60 L 55,55 L 55,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,170 L 145,60 L 150,55 L 150,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,60 Q 100,25 150,60" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,65 Q 100,35 145,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,30 L 100,15" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,20 Q 92,15 88,8" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,20 Q 108,15 112,8" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,25 Q 94,22 90,18" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 100,25 Q 106,22 110,18" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 52,80 Q 45,90 52,100 Q 45,110 52,120 Q 45,130 52,140" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 148,80 Q 155,90 148,100 Q 155,110 148,120 Q 155,130 148,140" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 45,92 Q 42,88 45,86 Q 48,88 45,92" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 45,112 Q 42,108 45,106 Q 48,108 45,112" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 45,132 Q 42,128 45,126 Q 48,128 45,132" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 155,88 Q 152,84 155,82 Q 158,84 155,88" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 155,108 Q 152,104 155,102 Q 158,104 155,108" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 155,128 Q 152,124 155,122 Q 158,124 155,128" stroke="#D4AF37" fill="#D4AF3722" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 65,170 L 65,75 Q 100,55 135,75 L 135,170" stroke="#D4AF37" fill="#F5D0610A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><line x1="40" y1="170" x2="160" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/></svg>',
-    'ན-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 100,25 L 35,160 L 165,160 Z" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="55" y1="120" x2="145" y2="120" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><line x1="70" y1="90" x2="130" y2="90" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><line x1="82" y1="65" x2="118" y2="65" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><path d="M 95,28 L 100,15 L 105,28" stroke="#D4AF37" fill="#F5D06144" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="18" r="3" stroke="#D4AF37" fill="#F5D061" stroke-width="1"/><path d="M 15,145 Q 30,135 50,142 Q 60,135 70,142" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 130,142 Q 140,135 155,142 Q 165,135 185,145" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 90,42 Q 95,38 100,42 Q 105,38 110,42" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><line x1="10" y1="165" x2="190" y2="165" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/><path d="M 100,25 L 60,110" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/><path d="M 100,25 L 140,110" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/></svg>',
-    'ན-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 50,160 L 50,90 L 60,80 L 140,80 L 150,90 L 150,160" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 45,90 L 100,55 L 155,90" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 85,160 L 85,115 Q 100,105 115,115 L 115,160" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 58,105 L 58,95 L 72,95 L 72,105 Z" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 128,105 L 128,95 L 142,95 L 142,105 Z" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 40,90 Q 30,70 35,50 Q 28,40 35,25" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 160,90 Q 170,70 165,50 Q 172,40 165,25" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 80,55 Q 75,40 80,25 Q 72,20 78,10" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 120,55 Q 125,40 120,25 Q 128,20 122,10" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,55 Q 95,35 100,18" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M 50,30 Q 55,20 65,25 Q 70,15 80,22" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 120,20 Q 130,12 140,18 Q 145,10 155,15" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 50,160 Q 55,165 60,160 Q 70,168 80,160" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 120,160 Q 130,168 140,160 Q 145,165 150,160" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/></svg>',
-    'ན-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 45,110 Q 45,145 70,160 Q 85,168 100,168 Q 115,168 130,160 Q 155,145 155,110" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="110" rx="55" ry="12" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2"/><path d="M 55,105 Q 70,80 100,75 Q 130,80 145,105" stroke="#D4AF37" fill="#F5D06115" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="80" cy="90" r="2.5" fill="#B8860B"/><circle cx="95" cy="85" r="2.5" fill="#B8860B"/><circle cx="110" cy="88" r="2.5" fill="#B8860B"/><circle cx="100" cy="95" r="2.5" fill="#B8860B"/><circle cx="85" cy="98" r="2.5" fill="#B8860B"/><circle cx="115" cy="96" r="2.5" fill="#B8860B"/><circle cx="90" cy="105" r="2.5" fill="#B8860B"/><circle cx="108" cy="103" r="2.5" fill="#B8860B"/><circle cx="75" cy="100" r="2.5" fill="#B8860B"/><circle cx="125" cy="100" r="2.5" fill="#B8860B"/><circle cx="42" cy="115" r="2" fill="#D4AF37"/><circle cx="38" cy="125" r="2" fill="#D4AF37"/><circle cx="158" cy="118" r="2" fill="#D4AF37"/><circle cx="162" cy="128" r="2" fill="#D4AF37"/><circle cx="50" cy="130" r="2" fill="#D4AF37"/><circle cx="150" cy="132" r="2" fill="#D4AF37"/><path d="M 95,82 L 98,75 L 101,82 Z" stroke="#F5D061" fill="#F5D06155" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M 110,85 L 113,78 L 116,85 Z" stroke="#F5D061" fill="#F5D06155" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="170" rx="25" ry="5" stroke="#D4AF37" fill="none" stroke-width="1.5"/><path d="M 55,135 Q 100,145 145,135" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/></svg>',
-    'ན-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 0,130 Q 40,100 80,120 Q 120,140 160,110 Q 190,95 200,105" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 0,155 Q 50,135 100,150 Q 150,165 200,145" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><circle cx="50" cy="60" r="1.5" fill="#D4AF37"/><circle cx="70" cy="50" r="1.5" fill="#D4AF37"/><circle cx="90" cy="65" r="1.5" fill="#D4AF37"/><circle cx="120" cy="45" r="1.5" fill="#D4AF37"/><circle cx="140" cy="55" r="1.5" fill="#D4AF37"/><circle cx="160" cy="42" r="1.5" fill="#D4AF37"/><circle cx="175" cy="58" r="1.5" fill="#D4AF37"/><circle cx="40" cy="75" r="1.5" fill="#D4AF37"/><circle cx="110" cy="70" r="1.5" fill="#D4AF37"/><path d="M 20,55 Q 50,45 80,55" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 100,40 Q 130,30 160,40" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 60,80 Q 90,72 120,80" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 70,130 L 70,115 L 80,110 L 80,125" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 80,110 L 95,105 L 95,120" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><line x1="70" y1="115" x2="95" y2="108" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="10" y1="170" x2="190" y2="170" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.2"/><path d="M 20,170 Q 60,162 100,170 Q 140,178 180,170" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/></svg>',
-    'ན-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 40,160 L 40,90 L 160,90 L 160,160" stroke="#D4AF37" fill="#D4AF3708" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 30,92 L 100,50 L 170,92" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,90 L 70,70 L 130,70 L 130,90" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 65,72 L 100,45 L 135,72" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="40" r="5" stroke="#F5D061" fill="#F5D06144" stroke-width="1.5"/><path d="M 100,35 L 100,28" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 82,160 L 82,110 Q 100,100 118,110 L 118,160" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 52,120 L 52,108 Q 60,104 68,108 L 68,120 Z" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 142,120 L 142,108 Q 150,104 158,108 L 158,120 Z" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 30,92 Q 25,88 20,92" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 170,92 Q 175,88 180,92" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="75" y1="160" x2="125" y2="160" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="72" y1="165" x2="128" y2="165" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="68" y1="170" x2="132" y2="170" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/><line x1="55" y1="92" x2="55" y2="155" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="145" y1="92" x2="145" y2="155" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.3"/></svg>',
-    'ན-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 50,170 L 50,60 L 55,55 L 55,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,170 L 145,60 L 150,55 L 150,170" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 50,60 Q 100,25 150,60" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 55,65 Q 100,35 145,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 92,30 L 100,15 L 108,30 Z" stroke="#F5D061" fill="#F5D06144" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="22" r="3" stroke="#D4AF37" fill="#F5D061" stroke-width="0"/><path d="M 48,80 L 52,74 L 56,80 L 52,86 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 144,80 L 148,74 L 152,80 L 148,86 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 48,105 L 52,99 L 56,105 L 52,111 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 144,105 L 148,99 L 152,105 L 148,111 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 48,130 L 52,124 L 56,130 L 52,136 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 144,130 L 148,124 L 152,130 L 148,136 Z" stroke="#D4AF37" fill="#D4AF3722" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 85,145 L 90,130 L 95,145 Z" stroke="#F5D061" fill="#F5D06133" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 105,148 L 110,135 L 115,148 Z" stroke="#F5D061" fill="#F5D06133" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><circle cx="100" cy="140" r="3" fill="#F5D061"/><path d="M 65,170 L 65,75 Q 100,55 135,75 L 135,170" stroke="#D4AF37" fill="#F5D06108" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"/><line x1="40" y1="170" x2="160" y2="170" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/></svg>',
-    'དྷཱིཿ-ཨ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 113,142 Q 130,145 113,148" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 114,147 Q 121,153 104,151" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 107,150 Q 100,157 93,150" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 96,151 Q 79,153 86,147" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 87,148 Q 70,145 87,142" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 86,143 Q 79,137 96,139" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 93,140 Q 100,133 107,140" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 104,139 Q 121,137 114,143" stroke="#D4AF37" fill="#D4AF3715" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 130,135 L 145,55 L 148,50 L 152,55 L 140,135" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 145,55 L 148,38 L 151,55" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 140,70 Q 155,60 150,50" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M 142,85 Q 158,78 155,65" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 48,65 L 48,110 L 75,110 L 75,65 Z" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 52,65 L 52,110" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><line x1="55" y1="72" x2="72" y2="72" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.3"/><line x1="55" y1="80" x2="72" y2="80" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.3"/><line x1="55" y1="88" x2="72" y2="88" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.3"/><line x1="55" y1="96" x2="72" y2="96" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.3"/><line x1="55" y1="104" x2="72" y2="104" stroke="#D4AF37" stroke-width="0.7" stroke-linecap="round" opacity="0.3"/><circle cx="100" cy="100" r="15" stroke="#F5D061" fill="#F5D06122" stroke-width="2"/><circle cx="100" cy="100" r="6" stroke="#D4AF37" fill="#F5D061" stroke-width="0"/><line x1="120.0" y1="100.0" x2="130.0" y2="100.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="117.32050807568878" y1="110.0" x2="125.98076211353316" y2="115.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="110.0" y1="117.32050807568876" x2="115.0" y2="125.98076211353316" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="100.0" y1="120.0" x2="100.0" y2="130.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="90.0" y1="117.32050807568878" x2="85.0" y2="125.98076211353316" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="82.67949192431122" y1="110.0" x2="74.01923788646684" y2="115.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="80.0" y1="100.0" x2="70.0" y2="100.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="82.67949192431124" y1="90.0" x2="74.01923788646684" y2="85.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="89.99999999999999" y1="82.67949192431124" x2="84.99999999999999" y2="74.01923788646684" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="100.0" y1="80.0" x2="100.0" y2="70.0" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="110.0" y1="82.67949192431124" x2="115.0" y2="74.01923788646684" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><line x1="117.32050807568876" y1="89.99999999999999" x2="125.98076211353316" y2="84.99999999999999" stroke="#F5D061" stroke-width="1" stroke-linecap="round" opacity="0.3"/><circle cx="100" cy="95" r="55" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.2"/></svg>',
-    'དྷཱིཿ-ར': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 60,65 L 60,55 Q 60,45 70,45 L 130,45 Q 140,45 140,55 L 140,65" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 60,135 L 60,145 Q 60,155 70,155 L 130,155 Q 140,155 140,145 L 140,135" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 60,65 Q 60,80 70,85 L 85,90 Q 95,93 95,100 Q 95,107 85,110 L 70,115 Q 60,120 60,135" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 140,65 Q 140,80 130,85 L 115,90 Q 105,93 105,100 Q 105,107 115,110 L 130,115 Q 140,120 140,135" stroke="#D4AF37" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,80 L 130,80" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,120 L 130,120" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 80,55 L 80,90 Q 80,100 80,110 L 80,145" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 120,55 L 120,90 Q 120,100 120,110 L 120,145" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,85 L 110,100 L 100,115 L 90,100 Z" stroke="#D4AF37" fill="#F5D06122" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="60" cy="45" r="3" fill="#B8860B"/><circle cx="140" cy="45" r="3" fill="#B8860B"/><circle cx="60" cy="155" r="3" fill="#B8860B"/><circle cx="140" cy="155" r="3" fill="#B8860B"/></svg>',
-    'དྷཱིཿ-པ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 65,130 Q 50,110 55,85 Q 58,70 70,60 Q 82,55 88,65 Q 95,80 85,100 Q 78,115 65,130" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="72" r="3" stroke="#D4AF37" fill="#D4AF37" stroke-width="1"/><path d="M 60,85 Q 48,80 45,90" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 75,105 Q 62,108 58,118" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 65,130 Q 55,138 48,145" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 65,130 Q 68,140 72,148" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 68,82 Q 71,79 74,82" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 72,92 Q 75,89 78,92" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 66,98 Q 69,95 72,98" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 76,88 Q 79,85 82,88" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 135,130 Q 150,110 145,85 Q 142,70 130,60 Q 118,55 112,65 Q 105,80 115,100 Q 122,115 135,130" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="128" cy="72" r="3" stroke="#D4AF37" fill="#D4AF37" stroke-width="1"/><path d="M 140,85 Q 152,80 155,90" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 125,105 Q 138,108 142,118" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 135,130 Q 145,138 152,145" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 135,130 Q 132,140 128,148" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 132,82 Q 129,79 126,82" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 128,92 Q 125,89 122,92" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 134,98 Q 131,95 128,98" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 124,88 Q 121,85 118,88" stroke="#D4AF37" fill="none" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="100" cy="90" r="2" fill="#F5D061"/><circle cx="100" cy="110" r="1.5" fill="#F5D061"/><circle cx="100" cy="75" r="1.5" fill="#F5D061"/></svg>',
-    'དྷཱིཿ-ཙ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M 100,40 Q 140,50 150,80 Q 158,110 145,140 Q 130,162 100,168 Q 75,165 60,148 Q 48,130 50,105 Q 55,75 80,55 Q 90,45 100,40" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,50 Q 130,58 138,80 Q 145,105 130,130 Q 118,148 100,150" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 100,65 Q 122,70 128,88 Q 132,108 120,125 Q 110,138 100,140" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M 100,80 Q 115,84 118,98 Q 120,112 110,122 Q 105,128 100,130" stroke="#F5D061" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M 60,148 Q 55,155 58,162 Q 65,168 75,165" stroke="#D4AF37" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 58,140 Q 50,150 55,160" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 30,145 Q 30,133.0 50,125" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M 20,145 Q 20,127.0 50,115" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.30000000000000004"/><path d="M 10,145 Q 10,121.0 50,105" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/><circle cx="100" cy="38" r="3" fill="#F5D061"/></svg>',
-    'དྷཱིཿ-ན': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="65" stroke="#D4AF37" fill="none" stroke-width="2.5"/><circle cx="100" cy="100" r="60" stroke="#D4AF37" fill="none" stroke-width="1" opacity="0.3"/><circle cx="100" cy="100" r="12" stroke="#D4AF37" fill="#F5D06133" stroke-width="2"/><circle cx="100" cy="100" r="5" stroke="#D4AF37" fill="#F5D061" stroke-width="0"/><line x1="114.0" y1="100.0" x2="158.0" y2="100.0" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="109.89949493661166" y1="109.89949493661166" x2="141.01219330881975" y2="141.01219330881975" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="100.0" y1="114.0" x2="100.0" y2="158.0" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="90.10050506338834" y1="109.89949493661166" x2="58.987806691180246" y2="141.01219330881975" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="86.0" y1="100.0" x2="42.0" y2="100.0" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="90.10050506338834" y1="90.10050506338834" x2="58.98780669118023" y2="58.987806691180246" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="100.0" y1="86.0" x2="99.99999999999999" y2="42.0" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><line x1="109.89949493661166" y1="90.10050506338834" x2="141.01219330881975" y2="58.98780669118023" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/><circle cx="162.0" cy="100.0" r="3.5" fill="#D4AF37"/><circle cx="143.84062043356596" cy="143.84062043356596" r="3.5" fill="#D4AF37"/><circle cx="100.0" cy="162.0" r="3.5" fill="#D4AF37"/><circle cx="56.159379566434055" cy="143.84062043356596" r="3.5" fill="#D4AF37"/><circle cx="38.0" cy="100.00000000000001" r="3.5" fill="#D4AF37"/><circle cx="56.15937956643404" cy="56.159379566434055" r="3.5" fill="#D4AF37"/><circle cx="99.99999999999999" cy="38.0" r="3.5" fill="#D4AF37"/><circle cx="143.84062043356593" cy="56.15937956643404" r="3.5" fill="#D4AF37"/><circle cx="100" cy="100" r="30" stroke="#F5D061" fill="none" stroke-width="1" opacity="0.3"/><circle cx="135.10742223542888" cy="114.54197042987342" r="2" fill="#B8860B"/><circle cx="114.54197042987342" cy="135.10742223542888" r="2" fill="#B8860B"/><circle cx="85.4580295701266" cy="135.10742223542888" r="2" fill="#B8860B"/><circle cx="64.8925777645711" cy="114.54197042987342" r="2" fill="#B8860B"/><circle cx="64.8925777645711" cy="85.4580295701266" r="2" fill="#B8860B"/><circle cx="85.4580295701266" cy="64.8925777645711" r="2" fill="#B8860B"/><circle cx="114.54197042987342" cy="64.89257776457112" r="2" fill="#B8860B"/><circle cx="135.10742223542888" cy="85.4580295701266" r="2" fill="#B8860B"/></svg>',
-    'དྷཱིཿ-དྷཱིཿ': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="175" x2="100" y2="25" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round"/><circle cx="100" cy="22" r="5" stroke="#F5D061" fill="#F5D06144" stroke-width="1.5"/><path d="M 100,17 L 100,10" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="40" rx="30" ry="8" stroke="#D4AF37" fill="#D4AF3711" stroke-width="2"/><path d="M 70,40 L 70,85 Q 100,95 130,85 L 130,40" stroke="#D4AF37" fill="#D4AF370A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="85" rx="30" ry="8" stroke="#D4AF37" fill="none" stroke-width="1.5"/><path d="M 70,85 Q 65,100 70,110 L 130,110 Q 135,100 130,85" stroke="#D4AF37" fill="#D4AF3708" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 70,110 Q 68,120 72,130 Q 85,135 100,132 Q 115,135 128,130 Q 132,120 130,110" stroke="#D4AF37" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 72,130 Q 60,145 55,165" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 85,132 Q 78,148 75,165" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 115,132 Q 122,148 125,165" stroke="#F5D061" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 128,130 Q 140,145 145,165" stroke="#F5D061" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M 73,55 Q 100,58 127,55" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 73,65 Q 100,68 127,65" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><path d="M 73,75 Q 100,78 127,75" stroke="#D4AF37" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/><circle cx="55" cy="168" r="2.5" fill="#B8860B"/><circle cx="75" cy="168" r="2.5" fill="#B8860B"/><circle cx="125" cy="168" r="2.5" fill="#B8860B"/><circle cx="145" cy="168" r="2.5" fill="#B8860B"/><circle cx="100" cy="62" r="8" stroke="#F5D061" fill="#F5D06111" stroke-width="1.5"/></svg>',
-};
-    </script>
 
     <footer>
         <div class="footer-content">
-            <p>文殊占卜系統 基於全知麥彭仁波切之法教</p>
-            <p style="margin-top: 10px; font-size: 0.85em;">索達吉堪布 譯</p>
+            <p>文殊占卜系統 基於全知麥彭仁波切之法教（索達吉堪布 譯）</p>
         </div>
     </footer>
 
@@ -868,12 +923,12 @@ const hexagramIllustrations = {
                 name: '無垢晴空',
                 fortune: '中平',
                 direction: '下下',
-                verse: '猶如遠離塵垢之虛空，自心安住於圓滿清淨等捨。',
+                verse: '問卦之人請諦聽：猶如遠離塵垢之虛空，自心安住於圓滿清淨等捨。',
                 meaning: '表示三解脫空性之聲。',
                 readings: {
                     '家庭和生命': '無有違緣障礙，卦象吉祥。',
                     '謀略與籌劃': '卦象平常。',
-                    '不可現見之事及遣除違緣': '卦象上吉，依憑諸佛菩薩之力，可迅速遣除障礙。',
+                    '不可現見之事及遣除違緣': '卦象上吉，依憑諸佛菩薩之力，可迅速遣除障礙，以前所有之險惡凶相皆得化解。',
                     '財運': '保持舊狀，難有突破，若欲有所進展，需以鮮花等物供養《般若經》。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '一路平安。',
@@ -882,13 +937,13 @@ const hexagramIllustrations = {
                     '丟失物': '除非根本未失，否則不可失而復得。',
                     '來客及成事': '卦象極為平常。'
                 },
-                practices: '依止金剛薩埵等本尊，念誦百字明及廣、中、略《般若經》，以四百禳解法、心經驅魔法可逢凶化吉。此卦為無畏布施卦。主修虛空藏菩薩。'
+                practices: '依止金剛薩埵等本尊，念誦百字明及廣、中、略《般若經》，以四百禳解法、心經驅魔法可逢凶化吉。主修虛空藏菩薩。此卦為無畏布施卦。'
             },
             'ཨ-ར': {
                 name: '璀璨杲日',
-                fortune: '吉',
+                fortune: '中平',
                 direction: '下東',
-                verse: '猶如璀璨之杲日般明朗具決定性，為圓滿吉祥之卦。',
+                verse: '問卦之人請諦聽：猶如璀璨之杲日般明朗具決定性，為圓滿吉祥之卦。',
                 meaning: '表示無有塵埃之天空極為晴朗。',
                 readings: {
                     '家庭和生命': '若能精進行善，則卦象吉祥。',
@@ -900,7 +955,7 @@ const hexagramIllustrations = {
                     '修法': '於智慧和聞思方面都能得以增上。',
                     '丟失物': '往西南方尋找可失而復得，或能了知其下落。',
                     '來客及成事': '卦象極為明朗。',
-                    '其他諸事': '若問其他諸事，則卦象皆為中平，土業及依止事業略凶。'
+                    '其他諸事': '卦象皆為中平，土業及依止事業略凶。'
                 },
                 practices: '依止智慧本尊，供燈及獻經旗，念誦《遣除十方黑暗經》及《光明品》則大吉。此卦為遣除黑暗卦。'
             },
@@ -919,9 +974,10 @@ const hexagramIllustrations = {
                     '疾病': '患染寒病及消化不良症狀，可很快痊癒，無有邪魔。',
                     '修法': '善法智慧增長，卦象吉祥。',
                     '丟失物': '可派遣女人至南方或北方尋找。',
-                    '來客及成事': '能夠成辦。'
+                    '來客及成事': '能夠成辦。',
+                    '其他諸事': '女人及溫和事業卦象吉祥，火業略差，三幼歡喜增上。'
                 },
-                practices: '依止白度母及尊勝母等天母。此卦為雲開霧散之卦。'
+                practices: '依止白度母及尊勝母等天母，隨意念誦《女人授記經》，做水施、沐浴、供養、放生及龍王歡喜之事則上吉，依上師瑜伽則吉祥。此卦為雲開霧散之卦。'
             },
             'ཨ-ཙ': {
                 name: '群星閃耀',
@@ -935,12 +991,13 @@ const hexagramIllustrations = {
                     '財運': '木業、牲畜、綠色、布匹等方面會有消息出現。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '一路平安，頃刻即歸。',
-                    '疾病': '風心外散而已，無有大礙。稍有急躁分別念眾多之過，依止不動佛可保吉祥。',
+                    '疾病': '風心外散而已，無有大礙，進行祖神祭及祈禱木天尊，則無有邪魔。稍有急躁分別念眾多之過，依止不動佛可保吉祥。',
                     '修法': '卦象吉祥，特別是在去往他鄉等方面為上吉。',
                     '丟失物': '雖然已散失他方，若能迅速尋找，前往北方或東方或許能失而復得。',
-                    '來客及成事': '卦象主來以及成功。'
+                    '來客及成事': '卦象主來以及成功。',
+                    '其他諸事': '卦象吉祥，水業略差。'
                 },
-                practices: '依止綠度母及事業本尊。此卦為借助風勢而得以增上之卦。'
+                practices: '依止綠度母及事業本尊，供養護法，拋撒大量風馬，作轉繞、頂禮、朵馬及回遮，做各種靈器等善法，閱讀諸佛出游故事，如：記載諸佛出行之《華嚴經》等，依止綠色本尊，諸事可迅速得以成辦。如同星曜軌道環繞虛空，可知此卦為藉助風勢而得以增上之卦。'
             },
             'ཨ-ན': {
                 name: '黃金大地',
@@ -955,11 +1012,13 @@ const hexagramIllustrations = {
                     '怨敵': '無有怨敵。',
                     '行旅之人': '略有耽延，最終順暢。',
                     '疾病': '雖然稍患涎病等但無妨礙，暫時不能痊癒。若做火施、風輪以及大量經旗，則無有魔障。',
+                    '罪戾': '乃地水不調所致。',
                     '修法': '究竟結果吉祥，若能始終安住一處，則賢妙。',
-                    '丟失物': '被自己人找到或速往東方尋找。',
-                    '來客及成事': '會延宕較長時間。'
+                    '丟失物': '被自己人找到或速往東方尋找，設使不能找到，則極難失而復得。',
+                    '來客及成事': '會延宕較長時間。',
+                    '其他諸事': '無有滯延，卦象吉祥。傳遞口信等依靠風的事業略差。'
                 },
-                practices: '依止釋迦牟尼佛、不動佛等金剛部諸尊。此卦為安住扎根之卦。'
+                practices: '依止釋迦牟尼佛、不動佛等金剛部諸尊則極為祥和，修寶生部諸尊及財神，做十萬泥塔小像，在石頭上鑿刻咒語，建造佛塔、佛像，並作安宅等儀式也極其勝妙。此卦為安住扎根之卦。'
             },
             'ཨ-དྷཱིཿ': {
                 name: '金剛妙音',
@@ -975,11 +1034,13 @@ const hexagramIllustrations = {
                     '怨敵': '不會出現怨敵並有天尊護佑。',
                     '行旅之人': '心情順暢，一帆風順，頃刻回返。',
                     '疾病': '病痛即將消逝，無有魔障。',
-                    '修法': '智慧能得以增長，修金剛妙音法則尤其善妙。',
+                    '罪戾': '無有其他出現，即使暫時顯現為凶兆，實為祥瑞之表示，若祈禱本尊則會成就或打開思路。',
                     '丟失物': '若依善巧方便，則可失而復得。',
-                    '來客及成事': '萬事順意、如願以償。'
+                    '修法': '智慧能得以增長，修金剛妙音法則尤其善妙。',
+                    '來客及成事': '萬事順意、如願以償。',
+                    '其他諸事': '卦象吉祥。成辦息業及女人事業尤其暢旺。'
                 },
-                practices: '此卦為六大城市主母卦，極為殊勝。此卦為智慧增上之卦。'
+                practices: '此卦為六大城市主母卦，極為殊勝。若修天尊三部法及隨一修法，依止黑熱嘎部佛母眷屬則顯晟旺。依止意樂瑜伽則祥和，念誦《勝樂金剛續》、《金剛空行續》等及《三摩地王經》。做空行滿願靈器，依止單堅（དན་ཅན）、尖扎（ལྕམ་དྲལ）、長壽五姊妹等具童子相的寂靜護法，特別是依靠退敵咒語及熱德(རེ་ཏི)等天女，作童女喜宴、吹奏海螺，則修持任何天尊均會成就。若精進修持天尊，則會心想事成。此卦為智慧增上之卦。'
             },
             'ར-ཨ': {
                 name: '焜然之燈',
@@ -993,12 +1054,13 @@ const hexagramIllustrations = {
                     '怨敵': '未出現敵害，即使有也在遠方，因鞭長莫及，無法作祟。',
                     '行旅之人': '一路順暢並能知其行蹤。',
                     '疾病': '日趨好轉，無有魔障。',
+                    '罪戾': '皆因宿業之故，導致違緣出現，但無大礙。',
                     '修法': '能夠自力更生，無有障礙。',
                     '丟失物': '若前往西南方找尋，則可失而復得。',
                     '來客及成事': '無礙，若精進則可成功。',
                     '其他諸事': '念出即行，不會有祲氣當道。'
                 },
-                practices: '依止長壽佛、作明佛母等蓮花部天尊。此卦為獨擋八面之卦。'
+                practices: '若朗讀《賢劫經》等經典，依止長壽佛、作明佛母、具光佛母以及蓮花部天尊，修持瑪吽噶熱佛父母以及紅大鵬可以成就。依靠大自在及紫瑪(ཙིད་མར)護法等，並做修橋補路、火施等善法則無有障礙出現，心中願望終將實現。此卦為獨擋八面之卦。'
             },
             'ར-ར': {
                 name: '馬頭明王',
@@ -1008,60 +1070,66 @@ const hexagramIllustrations = {
                 meaning: '表示欲樂之火熾燃，並再三火上加油。',
                 readings: {
                     '家庭和生命': '卦象呈增上之勢，身色容光煥發、神采奕奕。',
-                    '謀略與籌劃': '成功在望，可靜候佳音。',
-                    '財運': '乾燥及紅色財物會有所進益。',
-                    '怨敵': '不會出現怨敵。',
+                    '謀略與籌劃': '成功在望，可靜候佳音。若能將空行修持究竟，則事業將迅速顯達。',
+                    '財運': '乾燥及紅色財物會有所進益，特別是若能進行大量火施，則欲樂將極為增上。',
+                    '怨敵': '不會出現怨敵，若想鎮服東方或中部的敵人，則很快將有訊息傳來。。',
                     '行旅之人': '極其迅捷地順利回返。',
                     '疾病': '除患染暑熱、血症及瘟疫需徹底治療外，其他病痛將很快痊癒，無有任何魔障。',
+                    '罪戾': '成辦之事過大，且性情急躁而導致威猛本尊稍有不快，需虔誠祈禱供養贊神等護法。',
                     '修法': '修善法或懷柔事業將增上吉祥。',
                     '丟失物': '前往西南方尋找可失而復得。',
-                    '來客及成事': '迅速成功。'
+                    '來客及成事': '迅速成功。',
+                    '其他諸事': '雖然卦象吉祥，但依止事業及地、水事業非常衰落。猶如水分沸騰，蒸發殆盡或湖泊乾涸一般。'
                 },
-                practices: '依止馬頭明王等懷業天尊。此卦為喜宴增上之卦。'
+                practices: '依止馬頭明王、欲王等懷業天尊以及蓮花部忿怒本尊，念誦不空罥索等觀音經續。做供燈、燒施等火業，依止贊神等護法及懷、誅業天尊，可迅速成就事業，歡喜猶如火焰般熾盛。此卦為喜宴增上之卦。'
             },
             'ར-པ': {
                 name: '閻羅當道',
                 fortune: '大凶',
                 direction: '東北',
                 verse: '此卦象主凶殺，猶如微小之火星被水淹沒，無論何事均不利，始終被死主閻王嚴密控制。',
-                meaning: '表示殺害、死亡和摧毀。',
+                meaning: '本體行於南外門。表示殺害、死亡和摧毀。',
                 readings: {
-                    '家庭和生命': '主死亡或極大違緣。需做除去經函積塵等善業，並修忿怒化身朵瑪回遮法。',
+                    '家庭和生命': '主死亡或極大違緣。需做除去經函積塵等善業，並修忿怒化身多瑪回遮法。',
                     '謀略與籌劃': '違緣障礙極大，無法成事，不宜輕舉妄動，放棄為佳。',
                     '財運': '不但不能獲取，尚有災禍降臨。',
                     '怨敵': '有怨敵，特別要密切注意來自南方或北方的敵害。',
-                    '行旅之人': '頗為艱難，有大禍障。',
-                    '疾病': '危險極大，會罹患寒病、水瘡等水症及重症。應盡快念誦密咒、經續。',
-                    '修法': '阻礙重重，需精進修持皈依法。',
+                    '行旅之人': '頗為艱難，有大禍障。需修念白傘蓋母禳解法及除敵法。',
+                    '疾病': '危險極大，會罹患寒病、水瘡等水症及重症。應盡快念誦密咒、經續，若不精進對治，恐回天乏術。',
+                    '罪戾': '魑魅當道之原因與飲用之飲品不當有關，另有深藍色類圓形物，嫠婦之用品，如衣食等黑色物品類，因沾染不凈及失壞等晦氣而生大障。卦象顯示遭到詛咒厭勝的可能性極大，應依止金剛橛、度母等作詛咒禳解及回遮則會有益。也可作緣龍王禳解厭勝等佛事，或全力以赴地護持水魔等陰卓鬼。',
+                    '修法': '阻礙重重，需精進修持皈依法。，並竭盡全力作朵馬和回遮等佛事，以禳解詛咒、掃除魔障、遣除晦氣。還需諷誦各種經典及詮釋如來藏之類的經藏，做轉移禳解、除魔靈器、四百禳解法、咒語靈器等以解除災難，若不實施，必將大禍臨頭。',
                     '丟失物': '已去往南方或北方，但卻難覓蹤影。',
-                    '來客及成事': '事與願違、阻障紛紜、不能成功。'
+                    '來客及成事': '事與願違、阻障紛紜、不能成功。',
+                    '其他諸事': '除了打獵、服毒、殺生及摧毀之事業之外，其他均不吉祥。'
                 },
-                practices: '此卦主驟然起火，為命相之違緣紛現之卦。'
+                practices: '此卦主驟然起火，絕悶而死，為命相之違緣紛現之卦，故應大量勵力修持長壽經咒。'
             },
             'ར-ཙ': {
                 name: '大力君主',
                 fortune: '上吉',
                 direction: '東西',
-                verse: '猶如借助風力而使森林之火熊熊燃燒一般，主勢力增長，卦象吉祥。',
-                meaning: '表示凡趨入此道者均可賜予力量，為猛虎、雄獅發出英勇咆哮之卦。',
+                verse: '猶如借助風力而使森林之火熊熊燃燒一般，主勢力增長，卦象吉祥。懷、誅事業勢力雄厚。',
+                meaning: '本體為摧毀語主尊。大威德地母言：表示凡趨入此道者均可賜予力量，為猛虎、雄獅發出英勇咆哮之卦。',
                 readings: {
                     '家庭和生命': '主力量增上，不可作害。',
-                    '謀略與籌劃': '無論有何意趣，都具有強力。作勾招及誅業則極為殊勝。',
+                    '謀略與籌劃': '無論有何意趣，都具有強力。作勾招及誅業則極為殊勝。修持本尊密要順暢且極為殊勝。',
                     '財運': '圓滿增上，特別是綠色和橢圓形的不動類用品會進項較豐。',
                     '怨敵': '無有怨敵且均能百戰百勝。',
                     '行旅之人': '一路順暢，頃刻回返，且會值遇能予以扶助之貴人。',
-                    '疾病': '雖感心緒紛亂，但無妨礙。',
+                    '疾病': '雖感心緒紛亂，但無妨礙。若祈禱供養護法則無有魔障。',
+                    '罪戾': '雖有護法極力護佑，但不要以曾做過大供養自詡，以前的供養尚有欠缺，還需額外添加。',
                     '修法': '無論修何法都極為善妙，能夠成功。',
                     '丟失物': '若依靠力量，則可失而復得。',
-                    '來客及成事': '能夠成功，但需祈禱本尊。'
+                    '來客及成事': '能夠成功，但需祈禱本尊。',
+                    '其他諸事': '勢力增上，卦象吉祥。在祈雨等水事業方面卦象中平。'
                 },
-                practices: '依止金剛橛等威猛本尊。此卦為勢力增上之卦。'
+                practices: '依止金剛橛等威猛本尊、身部的忿怒金剛、忿怒母、三界尊勝、忿怒蓮師等主尊，念誦《五頂續》、《十忿怒續》等，時常贊頌、供養護法，則會得到蔭護。熏燒桑煙、拋撒風馬、供養供品等。欲成辦之事業將會具有強大勢力且十分祥瑞。依止象鼻天護法與曜王惹呼拉將會成就。此卦為勢力增上之卦。'
             },
             'ར-ན': {
                 name: '乾枯之樹',
                 fortune: '凶',
                 direction: '東南',
-                verse: '猶如枯萎之樹不能結出果實一般。心中恆時抱著強烈希望，卻始終無法成功。',
+                verse: '猶如枯萎之樹不能結出果實一般，主魔王信使漂移於東南方，尋食餓鬼云：心中恆時抱著強烈希望，卻始終無法成功。',
                 meaning: '表示與痛苦常相依伴。',
                 readings: {
                     '家庭和生命': '雖然暫時無礙，但最終運勢轉衰。卦象雖然中平，但有撲朔迷離、漂移不定之相。',
@@ -1069,12 +1137,13 @@ const hexagramIllustrations = {
                     '財運': '一無所獲。',
                     '怨敵': '稍有怨敵，但無大礙。',
                     '行旅之人': '顛簸勞累，耽延時間頗長。',
-                    '疾病': '稍有膽病侵擾，但無妨礙。',
-                    '修法': '雖然苦心竭慮，卻成事不足，敗事有餘。',
+                    '疾病': '稍有膽病侵擾，但無妨礙。魔障方面主要是尋食神之類或親眷陰魂未散，但無有大礙。應以大悲心做焦煙、孽債食子、水施等佛事。你住處所在神靈之福報已呈頹勢，應極力諷誦《金光明經》以及招福喚財經咒，精進積資和酬補，依要訣而行則極佳。',
+                    '修法': '雖然苦心竭慮，卻成事不足，敗事有餘。成功的希望有如兒童尋覓彩虹般虛幻渺茫。',
                     '丟失物': '已被他人隱藏，極難收回。',
-                    '來客及成事': '自心被他人所轉，猶如夢中營生難見成效。'
+                    '來客及成事': '自心被他人所轉，猶如夢中營生難見成效。',
+                    '其他諸事': '均呈衰相，尤其是謀求欲樂方面更是主凶。若想從某事中脫身則機會極佳，定能成全退隱之願。'
                 },
-                practices: '此卦為餓鬼無有精華之卦。若想從某事中脫身則機會極佳。'
+                practices: '作經懺，念誦《地藏十輪經》、《金光明經》等，以及增上飲食、財物方面的咒語和《文殊根本續》。此卦為餓鬼無有精華之卦。'
             },
             'ར-དྷཱིཿ': {
                 name: '南方門尊',
@@ -1084,42 +1153,44 @@ const hexagramIllustrations = {
                 meaning: '表示招來西方天女為助伴。',
                 readings: {
                     '家庭和生命': '家庭祺瑞增上，命星通泰盛旺。',
-                    '謀略與籌劃': '若聽從良友勸告則吉祥。',
+                    '謀略與籌劃': '若聽從良友勸告則吉祥。眼藥、圓光等依靠眼見的事業尤其暢旺。',
                     '財運': '倘若勤勞精進，則會有所回報。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '平安順利，瞬息即歸。',
                     '疾病': '若做經懺等佛事，則會立即有所好轉。無有任何魔障。',
                     '修法': '卦象吉祥，尤其是學習、淨障等則極為有利。',
                     '丟失物': '若前往南方或西方找尋會失而復得。',
-                    '來客及成事': '福星高照，定可大展鴻圖。'
+                    '來客及成事': '福星高照，定可大展鴻圖。',
+                    '其他諸事': '均為上吉之相。若有不能勝任之事，則頓生退意，不會枉費心機。'
                 },
-                practices: '依止大紅威德。此卦為良友開示妙智之卦。'
+                practices: '依止大紅威德則吉祥，修持語天女、蓮花部尊眾、具光佛母等主尊以及單堅等隨一護法，則能如虎添翼、青雲直上。諷誦《寺院》、《精華》、《金光明經》、《寶篋經》、《神馬續》、《作明佛母續》等，並作供燈、念誦《欲成頌》等善法，則自心自然趨往良善。此卦為良友開示妙智之卦。'
             },
             'པ-ཨ': {
                 name: '甘露妙瓶',
-                fortune: '上吉',
+                fortune: '吉',
                 direction: '北下',
                 verse: '猶如瓶中盛滿甘露，成辦息業必定成功。',
                 meaning: '表示因享用甘露而與死神永別。',
                 readings: {
                     '家庭和生命': '滿門吉慶。',
-                    '謀略與籌劃': '無有險阻，萬事亨通。',
+                    '謀略與籌劃': '無有險阻，萬事亨通，但應隨意修一上師法。',
                     '財運': '不招自來，定可獲取收益，如同妙瓶自然生出一切所欲。',
                     '怨敵': '無有怨敵，且均持寂靜調柔心態。',
                     '行旅之人': '一路順暢，且急緩有度。',
-                    '疾病': '若作治療、經懺等，則一切所作皆化為甘露。無有魔障。',
-                    '修法': '若作息業等，則可保成功吉祥。',
+                    '疾病': '若作治療、經懺等，則一切所作皆化為甘露，對患者尤其有利。無有魔障。',
+                    '修法': '若作息業等，則可保成功吉祥。依止普明佛等除障本尊、藥師佛、不動佛等則善妙。',
                     '丟失物': '可前往南方或湖畔搜尋。',
-                    '來客及成事': '萬無一失。'
+                    '來客及成事': '萬無一失。',
+                    '其他諸事': '做溫和事業時機適宜，若做下毒等惡業則絕對失敗，應趁早放棄打算。'
                 },
-                practices: '此卦為祝福洋溢，息業增上之卦。若做下毒等惡業則絕對失敗。'
+                practices: '作水施、寶瓶沐浴、超度、懺悔、凈障等，則一切違緣均可消失。此卦為祝福洋溢，息業增上之卦。'
             },
             'པ-ར': {
                 name: '無源池沼',
                 fortune: '凶',
                 direction: '北東',
                 verse: '猶如源泉阻斷之池沼，主一切受用均遇阻滯。',
-                meaning: '表示「於海中以沙砌屋有何意義？」',
+                meaning: '表示魔王信使游歷於西南方，羅剎總匯云：「於海中以沙砌屋有何意義？」',
                 readings: {
                     '家庭和生命': '雖然暫時無舛，但究竟結果不妙，應勵力積集資糧。',
                     '謀略與籌劃': '卦象中平，妄想依朋友得利則如水中撈月，終無指望。',
@@ -1127,66 +1198,72 @@ const hexagramIllustrations = {
                     '怨敵': '雖然頻頻算計，試圖加害，卻始終不能得手。',
                     '行旅之人': '雖然無有滯障，但卻難保準時回返。',
                     '疾病': '病根難斷，異常凶險。',
-                    '修法': '不見進展，懷疑及智慧障礙頗盛。切記！無有誠信的你應以增上信心為本。',
+                    '疾病': '病根難斷，異常凶險。應做大量孽債食子、替身俑像拋出。魔障方面，因有個別諍鬥男女攜來之財物，而引起少許戾氣，雖然不能辨別，但無大礙。',
+                    '修法': '不見進展，懷疑及智慧障礙頗盛，皆因修習方法不當而致。應念誦《三十五佛懺悔文》、《普賢行願品》、《華嚴經》、《賢劫經》、《廣大游舞經》、《般若八千頌》，尤其是蓮師心咒及《蓮師遺教》，則會令運勢猛然飆升。切記！無有誠信的你應以增上信心為本。',
                     '丟失物': '失去的定然丟失，重歸於己已成奢望。',
-                    '來客及成事': '雖然賦諸實施，但難有成效。'
+                    '來客及成事': '雖然付諸實施，但難有成效。',
+                    '其他諸事': '卦象均為不吉，尤其主親友不和。若欲毀壞別人的設想或行動，則極為有利。'
                 },
-                practices: '此卦為喜宴滅盡之卦。卦象均為不吉，尤其主親友不和。'
+                practices: '應向僧眾供齋，並大興薈供之事。依止密智空行母及四面佛母，做焦煙、替身俑像則有柳暗花明之效。此卦為喜宴滅盡之卦。'
             },
             'པ-པ': {
                 name: '甘露妙海',
                 fortune: '上吉',
                 direction: '北北',
-                verse: '猶如浩渺之大海擁有盈滿之水，主受用增上。',
-                meaning: '表示「夏日之河流洪水暴漲。」',
+                verse: '猶如浩淼之大海擁有盈滿之水，主受用增上。',
+                meaning: '表示：白尊勝母云：「夏日之河流洪水暴漲。」',
                 readings: {
                     '家庭和生命': '吉祥圓滿，洪福齊天。',
                     '謀略與籌劃': '萬事順意，紅運當頭。',
                     '財運': '如同遼闊無垠大海之水一般取之不盡。',
                     '怨敵': '無有怨敵，即使以前積有宿怨，也會化干戈為玉帛。',
                     '行旅之人': '順利，且按時回返。',
-                    '疾病': '稍感寒病，但無大礙。無有魔障。',
+                    '疾病': '稍感寒病，但無大礙。若患染水症，則卦象中平。無有魔障。此間貪欲尤為增上，會值遇女人。',
                     '修法': '極其善妙，修持甘露功德尊、寂靜本尊可成就息業。',
                     '丟失物': '若派遣親人找尋或前往南方或北方搜尋可失而復得。',
-                    '來客及成事': '與心意相合，自然成功。'
+                    '來客及成事': '與心意相合，自然成功。',
+                    '其他諸事': '均為上吉。主飲食豐盈，尤其依水事業更為暢達。親友關係和睦融洽，其樂融融。但火事業略差。'
                 },
-                practices: '此卦為病災息滅，清淨沐浴之卦。主飲食豐盈，尤其依水事業更為暢達。'
+                practices: '應諷誦《華嚴經》、五部陀羅尼。洗濯佛像、佛塔，供養龍王，則會心想事成。此卦為病災息滅，清淨沐浴之卦。'
             },
             'པ-ཙ': {
                 name: '煩惱邪魔',
-                fortune: '大凶',
+                fortune: '凶',
                 direction: '北西',
                 verse: '猶如大海波濤洶湧，咆哮不寧。',
-                meaning: '表示行持魔道之龍王翻攪大海，使其渾濁不堪。',
+                meaning: '表示：住於北外門之凶猛夜叉云：「行持魔道之龍王翻攪大海，使其渾濁不堪。」',
                 readings: {
                     '家庭和生命': '血光橫飛，阻滯重重。',
                     '謀略與籌劃': '心緒紛亂，不得安寧。',
                     '財運': '恰似狂風大作，令塵埃飛卷而逝，一無所獲且有煞星當道。',
-                    '怨敵': '怨敵如雲，尤以東方或北方為最。此卦為坎卦，主陷阱重重。',
+                    '怨敵': '怨敵如雲，尤以東方或北方為最。此卦為坎卦，主陷阱重重，險難橫生，謠言四起，議論紛紛。',
                     '行旅之人': '散失、敗壞、洩漏等諸凶困擾，尤當謹慎。',
-                    '疾病': '因風動而致筋脈疾患，始終難得安樂。',
-                    '修法': '心緒不寧，煩亂不安，且失毀戒體。',
+                    '疾病': '因風動而致筋脈疾患，始終難得安樂。應大量做驅魔食子、三分食子，諷誦《華嚴經》、《普賢行願品》，做贖死、曼扎四儀軌等佛事，依止不動佛則可轉危為安，魔障源於木物及綠色物品，因天龍八部及遭受詛咒，而導致毀損之晦氣叢生。',
+                    '罪戾': '因於惡言諸眾中頻繁往來，忙碌游走，耽著沉湎而引發爭論事端等所致。',
+                    '修法': '心緒不寧，煩亂不安，且失毀戒體。應依止不動佛，做忿怒回遮食子，供養象鼻護法，除去經卷積塵，夜叉靈器，拋撒風馬，遍插經旗等善事。',
                     '丟失物': '搜尋之路已全然顛倒，不能收回。',
-                    '來客及成事': '心煩意亂，難以成事。'
+                    '來客及成事': '心煩意亂，難以成事。',
+                    '其他諸事': '均為不吉，尤其是心亂如麻，難以控制。做分裂、挑撥及凶兆等惡業卻有如神助。'
                 },
-                practices: '此卦為被煩惱役使之卦。做分裂、挑撥及凶兆等惡業卻有如神助。'
+                practices: '做黃色泥塔佛像及黃色佛塔，則會時來運轉。此卦為被煩惱役使之卦。'
             },
             'པ-ན': {
                 name: '金色蓮花',
                 fortune: '吉',
                 direction: '北南',
-                verse: '猶如松石般的枝葉上生出金穗，主萬事祥瑞。',
-                meaning: '表示因甘露妙雨滋潤，而使曼達羅花園尤為悅意可人。',
+                verse: '猶如松石般的枝葉上生出金穗，主萬事祥瑞，無需稼穡即可長出天然之莊稼。',
+                meaning: '表示：白文殊極為中意之佛母宣說：「因甘露妙雨滋潤，而使曼達羅花園尤為悅意可人。」',
                 readings: {
                     '家庭和生命': '福瑞滿門，喜氣連連。',
                     '謀略與籌劃': '日趨興旺。',
-                    '財運': '獲益豐厚，若修增祿天母、多聞天子及黃財神則更加增盛無比。',
+                    '財運': '獲益豐厚，若修增祿天母、多聞天子及黃財神則更加增盛無比。依止曼尊護法為宜。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '一路順風，略有耽延，成功而返。',
                     '疾病': '逐漸消失，眾人均對你關懷備至，十分有益。無有魔障。',
-                    '修法': '善妙之心極為旺盛。',
+                    '修法': '善妙之心極為旺盛。你的善說猶如鮮花吸引蜜蜂般令各方仁人志士紛至沓來，而使門庭光顯。應依止護法及金剛亥母、金剛天母等寂靜本尊，唪誦《廣大游舞經》及大乘經藏，則結果會趨於吉祥。',
                     '丟失物': '可以獲得並以完美結局而收場。',
-                    '來客及成事': '漸次成功。'
+                    '來客及成事': '漸次成功。',
+                    '其他諸事': '均為逐漸趨於好轉之相，但對速戰速決，則勿冀望過厚。'
                 },
                 practices: '此卦為青春韶華，修行增上喜悅之卦。'
             },
@@ -1198,16 +1275,17 @@ const hexagramIllustrations = {
                 meaning: '表示獲得南方金河之財。',
                 readings: {
                     '家庭和生命': '龍馬精神，燊然昌旺。',
-                    '謀略與籌劃': '如意而成。',
+                    '謀略與籌劃': '如意而成。此間為修辟穀療法之最佳時機，若依止隨行佛母，定可實現所願。',
                     '財運': '人財俱獲，且歡愉之心極為增上。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '順利，按時回還。',
-                    '疾病': '若謹遵醫囑，則可廓清疾患。無有魔障。',
+                    '疾病': '若謹遵醫囑，則可廓清疾患。無有魔障，即使過去存在，此刻也化為烏有。',
                     '修法': '相續調柔，如意自成。',
                     '丟失物': '若前往南方或北方，定可失而復得。',
-                    '來客及成事': '如願以償。'
+                    '來客及成事': '如願以償。',
+                    '其他諸事': '均為善妙之卦。若能斷除惡行，則更為吉祥。'
                 },
-                practices: '此卦為親友美言相迎之吉卦。若能斷除惡行，則更為吉祥。'
+                practices: '依止不動佛、白摧破金剛及甘露漩明王等則息業宛若海中之如意寶般增上吉祥。另外依止蓮師及寶生部諸尊，依憑財神及增業本尊，淨居天神等寂靜護法則十分有利。依白怙主如意寶進行禱祀，做水擦擦像、金橋、製作藍色風馬旗、做水施等善法皆可成吉祥增上之助緣。此卦為親友美言相迎之吉卦。'
             },
             'ཙ-ཨ': {
                 name: '吉祥寶傘',
@@ -1217,91 +1295,98 @@ const hexagramIllustrations = {
                 meaning: '表示令人賞心悅目之花園中枝盛葉茂，繁花充盈。',
                 readings: {
                     '家庭和生命': '福壽康寧。',
-                    '謀略與籌劃': '瑞氣逼人。各種於你不利之傳聞，均如空中鳥跡般杳無蹤影。',
+                    '謀略與籌劃': '瑞氣逼人。若念修四面佛母則更為吉祥。尤其是若曾遭遇流言，則此刻各種於你不利之傳聞，均如空中鳥跡般杳無蹤影。',
                     '財運': '若向本尊進行禱祀，則會有喜訊傳來。',
                     '怨敵': '無有任何怨敵，無需疑慮。',
                     '行旅之人': '順利且很快回返。',
-                    '疾病': '病痛迅速痊癒。一切魔障本為自心假立，無有實質。',
+                    '疾病': '病痛迅速痊癒。一切魔障本為自心假立，無有實質，皆為自我分別念過於執著所致，無有其他妨礙。',
                     '修法': '得心應手。',
                     '丟失物': '卦象中平。',
-                    '來客及成事': '無有阻礙。'
+                    '來客及成事': '無有阻礙，除非自心安立。',
+                    '其他諸事': '均為可得安慰之卦象。'
                 },
-                practices: '此卦乃無論取道何方，皆得平安解脫之卦。'
+                practices: '依止幢頂臂嚴佛母、吉祥天母及大孔雀佛母，插經旗、豎經輪則可保吉慶。另外，若祈禱供養國王五護法也十分祥瑞。此卦乃無論取道何方，皆得平安解脫之卦。'
             },
             'ཙ-ར': {
                 name: '威猛兵器',
-                fortune: '吉',
+                fortune: '上吉',
                 direction: '西東',
                 verse: '猶如戰勝十方而獲取英雄帶，卦象吉祥。',
-                meaning: '表示摧毀邪念怨魔。「戰勝敵軍，降伏怨敵。」',
+                meaning: '表示摧毀邪念怨魔。忿怒閻王云：「戰勝敵軍，降伏怨敵。」',
                 readings: {
                     '家庭和生命': '日常護佑經懺若能黽勉而作，則極為殊勝。',
-                    '謀略與籌劃': '超勝一切，十分善妙。尤其是壓服敵人等誅業更是勇往直前、所向無敵。',
+                    '謀略與籌劃': '超勝一切，十分善妙。尤其是壓服敵人等誅業更是勇往直前、所向無敵。做重覆的事情則會成功。',
                     '財運': '以勢力可以獲取，在飲品等財物方面會有所進益。',
                     '怨敵': '降伏一切怨敵，戰無不勝。',
                     '行旅之人': '須臾即至，且超勝十方。',
-                    '疾病': '病痛息滅，無有絲毫魔障。',
+                    '疾病': '病痛息滅，無有絲毫魔障。因己方勢力過於強大，導致他方因頻頻受挫而心灰意懶，此刻應對其生大悲心。',
                     '修法': '懷業及誅業鋒芒畢露，成敗自主。',
                     '丟失物': '能夠失而復得。',
-                    '來客及成事': '成功已成定局。'
+                    '來客及成事': '成功已成定局。',
+                    '其他諸事': '均主勢力強大。地、水事業難有把握，降冰雹等事可以成功。'
                 },
-                practices: '依止大威德及忿怒閻羅。此卦乃勢力強盛，摧伏他眾之卦。地、水事業難有把握。'
+                practices: '若依止大威德及忿怒閻羅，修持絕地火，則令依火、風的事業及懷業、誅業獲得強勁之力，定能手到擒拿。另外，依止三部忿怒神、六部金剛語、事業本尊、黑忿怒神及金剛橛可獲得神力。依靠加贊護法或扎拉護法，特別是瑪囊（མ་ནིང）、袞波（མགོན་པོ）、事業閻羅及密主護法，更是如虎添翼。還需作薰煙、淨晦等贊頌儀軌。此卦乃勢力強盛，摧伏他眾之卦。'
             },
             'ཙ-པ': {
                 name: '空曠之心',
                 fortune: '凶',
                 direction: '西北',
                 verse: '猶如狂風捲過空曠山谷般內心空空如也。',
-                meaning: '表示「白紙為疾風吹送，難以收回。」',
+                meaning: '表示魔王信使疾馳於西北城郭。眾魔云：「白紙為疾風吹送，難以收回。」',
                 readings: {
                     '家庭和生命': '險象環生，極易分離。若作經懺可轉危為安。',
                     '謀略與籌劃': '苦心竭慮，收效甚微。',
                     '財運': '即使暫時掌握，也如拳中之水般遺漏無餘。',
-                    '怨敵': '即使有也僅為一些膽小懦弱之輩，難成大器。',
+                    '怨敵': '即使有也僅為一些膽小懦弱之輩，難成大器，最多引發一些爭論而已，不能構成危害。應當向他們佈施一些財物，並遠離這些無事生非的低劣之徒。',
                     '行旅之人': '空手而歸，難成所願。',
                     '疾病': '因稍感風寒症，而致身體不適。',
+                    '罪戾': '因結交惡友及劣眷而使內心厭惡增上，絕交為宜。前途峰迴路轉，並有凶煞之氣。魔障危害不大。應為餓鬼做替身俑像，並作遣除魔女儀式，方能否極泰來，轉危為安。',
                     '修法': '內心紛亂急躁，難見起色。',
                     '丟失物': '若想失而復得，恰似海底撈針。',
-                    '來客及成事': '六神無主，大失方寸，難有進展。'
+                    '來客及成事': '六神無主，大失方寸，難有進展。',
+                    '其他諸事': '均主所願不成，呈不聽勸誡之卦象。'
                 },
-                practices: '此卦乃內心分崩離析之卦。呈不聽勸誡之卦象。'
+                practices: '應穩固自心，勤積資糧，諷誦律經，做禳解、酬補等佛事，諷誦《八顯現》及《遣障法》等。此卦乃內心分崩離析之卦。'
             },
             'ཙ-ཙ': {
                 name: '飄揚飛幡',
                 fortune: '吉',
                 direction: '西西',
-                verse: '猶如天王為勝利而奏擊，響徹天宇之鼓聲般，美名及讚頌四海遠揚。',
-                meaning: '表示似若高山之巔經旗高懸，讚譽之聲迎風飛舞，傳遍四方。',
+                verse: '猶如天王為勝利而奏擊，響徹天宇之鼓聲般，美名及讚頌四海遠揚。為大鵬及游龍翱翔於天際之卦象。',
+                meaning: '表示：甘露漩明王云：似若高山之巔經旗高懸，讚譽之聲迎風飛舞，傳遍四方。',
                 readings: {
-                    '家庭和生命': '紅運當頭，福瑞盈門，但物極必反。',
-                    '謀略與籌劃': '欲為則成，其權在己。',
+                    '家庭和生命': '紅運當頭，福瑞盈門，但物極必反。不可過分貪婪，應適可而止，以免樹大招風。',
+                    '謀略與籌劃': '欲為則成，其權在己。若修習護法精要圓滿，時機成熟之際，各種事業均會蒸蒸日上。',
                     '財運': '財祿旋即得手。',
                     '怨敵': '若有怨仇出現，也能戰勝對方，化險為夷。',
                     '行旅之人': '一路順暢，即刻攜佳音而歸。',
                     '疾病': '風症肆虐，但無大礙。無有魔障。',
                     '修法': '時機極佳，且能獲得盛譽。',
                     '丟失物': '若前往東北方尋找，可迅速收回。',
-                    '來客及成事': '一切所願皆能實現。'
+                    '來客及成事': '一切所願皆能實現。',
+                    '其他諸事': '均為吉祥穩妥之卦象。地、水之業成功之相渺茫。'
                 },
-                practices: '此卦乃迅速斷定，聞聽悅耳妙語之卦。地、水之業成功之相渺茫。'
+                practices: '依靠供養、贊頌和放咒，修持忿怒藍杖明王和怎扎母，依止事業天尊、那內瑪(ན་ནེ་མ)、屍林主等護法及扎拉護法則吉祥，尤以修香炯根達旬呢(ཞིང་སྐྱོང་ཀུན་དག་གཞོན་ནུ)護法為勝。出行之事極利。若勵力經懺，則為修空行及神足等成就之極大助緣，此間做摒除之事尤為適宜。對僧人敬獻哈達、供齋及佈施等則可保無往不利。此卦乃迅速斷定，聞聽悅耳妙語之卦。'
             },
             'ཙ-ན': {
                 name: '蘊聚魔王',
                 fortune: '大凶',
                 direction: '西南',
                 verse: '猶如樹幹攔腰折斷，家庭、壽命及財運皆主凶。',
-                meaning: '表示以利刃之鐮切割草木。',
+                meaning: '表示：位於東外門之害命屠夫曰：以利刃之鐮切割草木。',
                 readings: {
-                    '家庭和生命': '宜於念誦各種咒語，做朵瑪及回遮等法事。',
-                    '謀略與籌劃': '魔障來勢凶猛，十分不利。',
-                    '怨敵': '敵軍龐大，尤以東方及中方之危害為甚。最近有招致大人物之責難等相。',
+                    '家庭和生命': '宜於念誦各種咒語，做多瑪及回遮等法事。',
+                    '謀略與籌劃': '魔障來勢凶猛，十分不利。應諷誦驅魔除障經咒及《度母經》、《遣除十方黑暗經》及《解脫經》。',
+                    '怨敵': '敵軍龐大，尤以東方及中方之危害為甚。 應作馬頭明王及金剛降敵法、解除厭勝法。最近有招致大人物之責難等相，應以戰戰兢兢、如履薄冰之心度過這一低迷時期。',
                     '行旅之人': '違緣重重，事端頻繁，難以如期回返。',
-                    '疾病': '涎病十分沉重，會引發呼吸困難等症狀。',
-                    '修法': '道路險阻。應依止度母等除障本尊。',
+                    '疾病': '涎病十分沉重，會引發呼吸困難等症狀，應做各種禳解及靈器。無有魔障。',
+                    '罪戾': '因沖撞地祇及當方神，由黃色或四方物品以及凶宅等，或因勢力顯赫的僧人或苯教徒挈帶物件由魔王附著而引發，其緣由可歸咎於人類或大力非人不悅，或毀壞佛塔、佛像等而致晦氣彌漫，應做熏煙沐浴等事以凈除邪氣。',
+                    '修法': '道路險阻。應依止度母等除障本尊，作消除隘道法門，諷誦《八顯現》及《遣障法》，整治屍林、土地或區域，使當方神歡悅，則可化險為夷。',
                     '丟失物': '猶若落入獅口之肉般難以奪回。',
-                    '來客及成事': '雖然聲勢浩大，卻一無所成。'
+                    '來客及成事': '雖然聲勢浩大，卻一無所成。',
+                    '其他諸事': '均為不利之卦象。唯有欺瞞他人等狡詐之事，壓服、詛咒及陷害等惡業能事事順意。'
                 },
-                practices: '此卦乃巍峨重山鎮壓之卦。唯有欺瞞他人等狡詐之事能事事順意。'
+                practices: '作多瑪及回遮儀式，修持《八大法行》，作戰勝靈器、解縛等法門。精進修持大白傘蓋佛母及金剛橛，方可逢凶化吉。此卦乃巍峨重山鎮壓之卦。'
             },
             'ཙ-དྷཱིཿ': {
                 name: '東方門尊',
@@ -1310,62 +1395,65 @@ const hexagramIllustrations = {
                 verse: '讚譽之聲四處傳揚，一切所願均能成辦，卦象吉祥。也可稱之為如意寶樹。',
                 meaning: '表示事業飛幡迎風招展。',
                 readings: {
-                    '家庭和生命': '有新的轉機，呈欣欣向榮之勢。',
-                    '謀略與籌劃': '有新的轉機，呈欣欣向榮之勢。',
-                    '財運': '有新的轉機，呈欣欣向榮之勢。',
+                    '家庭和生命': '有新的轉機，呈欣欣向榮之勢，為他人傳送訊息等事尤為善妙。',
+                    '謀略與籌劃': '有新的轉機，呈欣欣向榮之勢，為他人傳送訊息等事尤為善妙。',
+                    '財運': '有新的轉機，呈欣欣向榮之勢，為他人傳送訊息等事尤為善妙。',
                     '怨敵': '無有怨敵，舒心悅意。',
                     '行旅之人': '一路順暢，值遇良伴，俄頃回返。',
                     '疾病': '病痛息滅，無有魔障。',
                     '修法': '卦象吉祥，智慧及行事呈蒸蒸日上之勢。',
                     '丟失物': '若前往東方或北方搜尋，可失而復得。',
-                    '來客及成事': '抉擇英明，如火加薪，必將成事。'
+                    '來客及成事': '抉擇英明，如火加薪，必將成事。',
+                    '其他諸事': '均為如是而行，則天時地利之卦。'
                 },
-                practices: '此卦乃闡演悅語，遊戲開場之卦。若問其他諸事，則均為如是而行，則天時地利之卦。'
+                practices: '依止大力本尊、羅炯瑪(ལོ་གྱོན་མ)、尊勝母、度母及事業部本尊，供養四臂護法、扎拉護法等，依靠瑪積山神及夜叉等則勝妙。諷誦《善解密意經》、《稻稈經》、《富樓那請問經》、《彌勒請問經》、《獅吼經》及《華嚴經》，做講經聞法、吹奏海螺、樹立飛幡等善法均極為有利。此卦乃闡演悅語，遊戲開場之卦。'
             },
             'ན-ཨ': {
                 name: '黃金山王',
                 fortune: '吉',
                 direction: '南下',
-                verse: '猶如金山高聳入雲，主家庭和壽命穩如山王。',
+                verse: '猶如金山高聳入雲。',
                 meaning: '表示不變永恆之意。',
                 readings: {
-                    '家庭和生命': '穩如泰山。',
+                    '家庭和生命': '穩如山王。',
                     '謀略與籌劃': '結局穩如泰山。',
                     '財運': '保存已有財力，穩定不變且自然善妙。',
                     '怨敵': '無有怨敵，且己方勢力穩固。',
                     '行旅之人': '無有違緣，稍有延滯。',
                     '疾病': '病痛消亡，無有魔障。',
-                    '修法': '恆定穩固，無有動搖，自然殊勝。',
+                    '修法': '恆定穩固，無有動搖，自然勝妙。',
                     '丟失物': '不會落入他人之手。',
-                    '來客及成事': '勇往直前，決不退轉。'
+                    '來客及成事': '勇往直前，決不退轉，其他之事雖有所耽延，但終能實現。',
+                    '其他諸事': '雖然卦象吉祥，但略有延宕。'
                 },
-                practices: '依止地藏王菩薩、財神等。此卦乃基礎穩固，飛黃騰達之卦。'
+                practices: '應諷誦《華嚴經》及律經，依止閻羅部佛母及金剛部諸尊、地藏王菩薩、廣目天王、多聞天子以及財神則增上吉祥。宜塑造佛像、修建佛塔，作穩固事業。此卦乃基礎穩固，飛黃騰達之卦。'
             },
             'ན-ར': {
                 name: '天子之魔',
-                fortune: '大凶',
+                fortune: '凶',
                 direction: '南東',
                 verse: '猶如美妙宮殿被火焚燒，卦象祲晦。',
-                meaning: '表示「欲火焚身，自必毀滅。」',
+                meaning: '表示：住於西外門之欺眾大邪師曰：「欲火焚身，自必毀滅。」',
                 readings: {
                     '家庭和生命': '搖搖欲墜，風雨飄搖。',
                     '謀略與籌劃': '徒勞無功，空手而返。',
                     '財運': '恰似綢緞燃燒所餘灰燼般所剩無幾。',
                     '怨敵': '怨敵猖獗，尤其西南方更是風狂雨驟。',
                     '行旅之人': '人與財物均面臨危險境地。',
-                    '疾病': '會罹患熱邪、血症及疫癘等病，疼痛纏身，大勢不妙。',
-                    '修法': '險象環生，步履維艱。應大量作寂靜護摩及水施。',
+                    '疾病': '會罹患熱邪、血症及疫癘等病，疼痛纏身，患者苦不堪言，大勢不妙。其原因可歸咎於血肉及來自西方之三角形物品或紅色物品帶來魔障之故，也可能是由於竈煙觸怒火神所致。',
+                    '修法': '險象環生，步履維艱。應大量作寂靜護摩及水施，修持藥師佛及白色寂靜本尊，策勵諷誦《蓮師遺教》及蓮師心咒。',
                     '丟失物': '一去而不復返。',
-                    '來客及成事': '卦象凶險，陰雲密布，無法重見天日。'
+                    '來客及成事': '卦象凶險，陰雲密布，無法重見天日。',
+                    '其他諸事': '均主凶。唯有縱火燒城等不祥之事會遂願。'
                 },
-                practices: '此卦乃諸蘊蒙受痛苦之卦。唯有縱火燒城等不祥之事會遂願。'
+                practices: '應觀修斷法，做四百禳解等法事。此卦乃諸蘊蒙受痛苦之卦。'
             },
             'ན-པ': {
                 name: '穀盈金盆',
-                fortune: '上吉',
+                fortune: '吉',
                 direction: '南北',
                 verse: '猶如珍寶之盆盛滿飲食，主各種受用源源不斷。也可稱之為如意牛。',
-                meaning: '表示「金瓶之器盛裝精華甘露，可謂珠聯璧合，圓滿豐饒。」',
+                meaning: '表示滅除衰敗，白文殊云：「金瓶之器盛裝精華甘露，可謂珠聯璧合，圓滿豐饒。」',
                 readings: {
                     '家庭和生命': '祺瑞平安。',
                     '謀略與籌劃': '歡悅增上。',
@@ -1375,47 +1463,51 @@ const hexagramIllustrations = {
                     '疾病': '病障息滅，風平浪靜，無有魔障。一切魔障皆因自心增上安立，無有實質。',
                     '修法': '時機大好。',
                     '丟失物': '若前往東方、中部或南方則會失而復得。',
-                    '來客及成事': '結局圓滿。'
+                    '來客及成事': '來客已進入己方境內。成事方面雖然開頭不暢，略有延滯，但結局圓滿。',
+                    '其他諸事': '均為稱心如意之卦。'
                 },
-                practices: '此卦乃逸樂增上，財運亨通之卦。'
+                practices: '在此期間求灌頂，依止財神或寶生部諸尊，修昇起次第及辟穀術等，是施展抱負之最佳良機。作會供及供養龍王，念誦《普明續》及《梵天陀羅尼》，依止象鼻天及普旋三尊，則更有畫龍點睛之妙。此卦乃逸樂增上，財運亨通之卦。'
             },
             'ན-ཙ': {
                 name: '沙之丘堙',
                 fortune: '凶',
                 direction: '南西',
                 verse: '猶如風捲塵土般終無結果。',
-                meaning: '表示「黃金宮殿逐漸毀如塵土。」',
+                meaning: '表示魔王信使游蕩於東北，竊心鬼蜮聚集而云：「黃金宮殿逐漸毀如塵土。」',
                 readings: {
                     '家庭和生命': '漸成衰勢。',
                     '謀略與籌劃': '風雲突變，終致衰敗。',
                     '財運': '裒多益寡，不僅不會有所收益，以前所有也呈頹勢。',
-                    '怨敵': '隱藏的敵人會忽然發動攻勢。',
+                    '怨敵': '隱藏的敵人會忽然發動攻勢，使安於逸樂現狀之人措手不及，故應大肆厲行除敵法及禳解回遮法。',
                     '行旅之人': '會帶回一些噩耗。',
-                    '疾病': '無有大礙，僅有一些隱秘的溫和病症。',
+                    '疾病': '無有大礙，僅有一些隱秘的溫和病症，應作經懺等善法。無有大魔障，僅因分別妄念粗大紊亂而引發，應多作佈施以消除分別執著。',
+                    '罪戾': '因以前磋商事宜及行事欠妥，過失日積月累，最終導致不良結果。應做各類靈器，鎮壓夭折鬼儀式，為僧眾供齋，並請其念誦吉祥經文。',
                     '修法': '結局不妙，難以成事。',
                     '丟失物': '拖延時間越長，越難以找回。',
-                    '來客及成事': '困難重重，即使辦成也於事無補。'
+                    '來客及成事': '困難重重，即使辦成也於事無補。',
+                    '其他諸事': '均為凶多吉少。唯行摧毀之業卻有如神助。卦象主家庭等有隱患潛伏，應嚴加防範。'
                 },
-                practices: '此卦乃大山毀若微塵之卦。卦象主家庭等有隱患潛伏。唯行摧毀之業卻有如神助。'
+                practices: '諷誦《寶積經》、《吉祥積經》，勵力念誦《欲成頌》。做金橋、壓服鬼蜮等佛事，用黃金書寫經函則對緩解魔障有所裨益。此卦乃大山毀若微塵之卦。'
             },
             'ན-ན': {
                 name: '黃金宮殿',
-                fortune: '上吉',
+                fortune: '吉',
                 direction: '南南',
                 verse: '猶如圓滿增上之無量宮般，卦象穩固、吉祥。',
-                meaning: '表示黃金大地之上，珍寶山偉岸雄奇。為無盡寶藏之卦象。',
+                meaning: '表示：黃金大地之上，珍寶山偉岸雄奇，令人嘆為觀止。為無盡寶藏之卦象。',
                 readings: {
                     '家庭和生命': '穩若泰山，福瑞圓滿。',
                     '謀略與籌劃': '極為恆定，猶若須彌般善妙穩定。修財神及當方神可有助於成事。',
                     '財運': '財源茂盛，結局圓滿。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '雖然略有阻滯，但能成辦大事。',
-                    '疾病': '雖然久病不癒，病情嚴重，但無妨礙。無有魔障及怨債。',
+                    '疾病': '雖然久病不癒，病情嚴重，但無妨礙。欲以其他方法拔除病根，則困難重重。無有魔障及怨債。',
                     '修法': '在此期間求戒，則穩如山王，定能如願以償。',
                     '丟失物': '置於某處未動，如果有所移動，則難以找回。',
-                    '來客及成事': '一旦決定，應堅持到底。'
+                    '來客及成事': '一旦決定，應堅持到底，否則，成事之日將遙遙無期。',
+                    '其他諸事': '無有耽延則極為勝妙。做請求及捨棄舊行等事以及動搖、摧毀之業，有若逆水行舟，極為困難。'
                 },
-                practices: '此卦乃巨大壯觀之卦。做請求及捨棄舊行等事以及動搖、摧毀之業極為困難。'
+                practices: '修伏藏法、束縛法及緊急之業極為殊勝。依止增祿天母（ནོར་རྒྱུན་མ）等財神，建造佛塔，埋藏寶瓶，修持增業等，以及念誦佛眼菩薩及地藏王菩薩心咒，祈禱供養瑪哈嘎拉及娘舅護法更是如虎添翼。此卦乃巨大壯觀之卦。'
             },
             'ན-དྷཱིཿ': {
                 name: '西方門尊',
@@ -1430,18 +1522,19 @@ const hexagramIllustrations = {
                     '怨敵': '無有怨敵。',
                     '行旅之人': '一路安寧，辦事順暢。',
                     '疾病': '漸次痊癒，無有魔障。',
-                    '修法': '極為上妙。',
+                    '修法': '極為上妙，依止金剛部、三部如來諸尊能有較大進展，尚應依止大力神、大忿怒主尊。',
                     '丟失物': '已到別處，難以找回。',
-                    '來客及成事': '終究能成。'
+                    '來客及成事': '終究能成。',
+                    '其他諸事': '卦象均主吉，尤以探寶為甚。'
                 },
-                practices: '此卦乃新娘入宮之卦。若問其他諸事，卦象均主吉，尤以探寶為甚。'
+                practices: '依靠魔、妖、龍三尊能獲得好運，應對諸尊全部恭敬承事，祈禱地祇、當方神可保一方吉祥。此卦乃新娘入宮之卦。'                
             },
             'དྷཱིཿ-ཨ': {
                 name: '文殊勇士',
                 fortune: '上上吉',
                 direction: '上下',
                 verse: '猶如手持摩尼珍寶，主心想事成。',
-                meaning: '表示「覺性智慧大妙力無偏增長。」',
+                meaning: '表示：大樂智慧勇士云：「覺性智慧大妙力無偏增長。」',
                 readings: {
                     '家庭和生命': '恆定無礙，昌盛祺瑞。',
                     '謀略與籌劃': '無欺無惑之正量，聞思總佛法，尤其密法時機大好。',
@@ -1449,11 +1542,13 @@ const hexagramIllustrations = {
                     '怨敵': '全部心悅誠服，對己恭敬頂禮。',
                     '行旅之人': '平安順利。',
                     '疾病': '自然消失，無有任何魔障。',
+                    '罪戾': '萬事亨通，無有怨債。',
                     '修法': '禎祺圓滿，舒心悅意，能遂諸願。',
                     '丟失物': '定能失而復得。',
-                    '來客及成事': '事事通暢。'
+                    '來客及成事': '事事通暢。',
+                    '其他諸事': '則為能夠成辦之卦。'
                 },
-                practices: '依止文殊勇士、蓮師、時輪金剛等。此卦乃三十六城主尊之卦，主智慧增長，成就殊勝。'
+                practices: '依止文殊勇士、蓮師、時輪金剛、真實本尊等諸尊，修持幻身、大圓滿、六支加行，依止唐拉山神及袞波，做塑造佛像、修建佛塔、刻印經函等善事必能令運勢扶搖直上。此卦乃三十六城主尊之卦，主智慧增長，成就殊勝。'
             },
             'དྷཱིཿ-ར': {
                 name: '吉祥之結',
@@ -1463,23 +1558,25 @@ const hexagramIllustrations = {
                 meaning: '表示以明亮眼眸觀察稀奇之景觀。',
                 readings: {
                     '家庭和生命': '福瑞盈門，壽比南山。',
-                    '謀略與籌劃': '春風得意，如日中天。',
+                    '謀略與籌劃': '春風得意，如日中天。住處等地佳運高照，若與合作者協商會達成共識，其樂融融，神通紛至，行事方面也善妙穩妥。',
                     '財運': '興高采烈地獲得財物。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '一路平安，俄頃即歸。',
                     '疾病': '病痛迅疾消逝，無有魔障。',
+                    '罪戾': '無有罪戾，心寬意舒。',
                     '修法': '無論心念如何，均有推波助瀾之效。',
                     '丟失物': '迅速找回。',
-                    '來客及成事': '賓客光臨，辦事必成。'
+                    '來客及成事': '賓客光臨，辦事必成。',
+                    '其他諸事': '心意如何，都能稱心如意。'
                 },
-                practices: '此卦乃賓客忠言勸告之卦。若問其他諸事，則心意如何，都能稱心如意。'
+                practices: '依止除蓋障菩薩、頂髻尊勝母、大白傘蓋佛母等吉祥本尊，特別是依止勝樂金剛、金剛薩埵幻化網則更為吉瑞，必定心想事成。若念誦《欲成頌》則善妙無疑。繼續祈禱以前內心念念不忘之本尊更是瑞氣逼人。此卦乃賓客忠言勸告之卦。'
             },
             'དྷཱིཿ-པ': {
                 name: '黃金瑞魚',
                 fortune: '上吉',
                 direction: '上北',
                 verse: '猶如魚兒遨遊於海中，技藝長足進展，吉祥倍增。',
-                meaning: '表示以甘露沐浴，歡喜增盛。',
+                meaning: '表示：以甘露沐浴，歡喜增盛。',
                 readings: {
                     '家庭和生命': '門庭光顯，家業興旺。',
                     '謀略與籌劃': '大有起色。',
@@ -1489,29 +1586,30 @@ const hexagramIllustrations = {
                     '疾病': '病患息滅，無有魔障。',
                     '修法': '善妙增上。',
                     '丟失物': '失而復得。',
-                    '來客及成事': '正是時機成熟之際。'
+                    '來客及成事': '正是時機成熟之際。',
+                    '其他諸事': '均為順利賢善之卦象。為研讀醫方明之大好時機。'
                 },
-                practices: '此卦乃心想事成，和睦相處之卦。若問其他諸事，則均為順利賢善之卦象。為研讀醫方明之大好時機。'
+                practices: '諷誦《寶積經》、《念住經》及零散佛經，作息、增護摩，依止彌勒菩薩則勝妙。此卦乃心想事成，和睦相處之卦。'
             },
             'དྷཱིཿ-ཙ': {
                 name: '潔白法螺',
-                fortune: '吉',
+                fortune: '上吉',
                 direction: '上西',
                 verse: '猶如螺號發出悅耳之聲，卦象禎祺，讚譽鵲起。',
                 meaning: '表示奏出內心期盼之妙音。',
                 readings: {
                     '家庭和生命': '萬事吉祥，可佇候佳音。',
-                    '謀略與籌劃': '萬事吉祥，可佇候佳音。',
-                    '學習': '尤其學習聲明與辯論等更是時通運泰。',
+                    '謀略與籌劃': '萬事吉祥，可佇候佳音。尤其學習聲明與辯論等更是時通運泰。',
                     '財運': '將有新信息傳來。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '會攜喜訊而歸。',
                     '疾病': '對生命沒有妨礙，僅為心神不定等症。無有魔障。',
                     '修法': '美譽紛至沓來。',
                     '丟失物': '會得到新信息。',
-                    '來客及成事': '必定成功。'
+                    '來客及成事': '必定成功。',
+                    '其他諸事': '均為適宜之卦象。'   
                 },
-                practices: '此卦乃言傳訊息吉祥增上之卦。若問其他諸事，則均為適宜之卦象。'
+                practices: '依止普賢菩薩，念誦幢頂臂嚴佛母心咒等咒語，依靠四面護法及夜叉類護法。卦象適宜問答事宜。此卦乃言傳訊息吉祥增上之卦。'
             },
             'དྷཱིཿ-ན': {
                 name: '黃金法輪',
@@ -1528,28 +1626,30 @@ const hexagramIllustrations = {
                     '疾病': '必定無礙，但因天神不快，故拖延時間略長。無有魔障。',
                     '修法': '祺祥順利。',
                     '丟失物': '他日定會找回。',
-                    '來客及成事': '稍有耽延，結局圓滿。'
+                    '來客及成事': '稍有耽延，結局圓滿。',
+                    '其他諸事': '均為結果善妙之卦。'
                 },
-                practices: '此卦乃榮登寶座之卦。若問其他諸事，則均為結果善妙之卦。'
+                practices: '依止窩東（ཟོད་སྟོང）、閻羅、無上瑜伽部黑熱嘎及毗盧遮那佛等本尊，依靠頂髻轉輪忿怒明王、閣夏（གུར་ཞལ）護法及扎拉護法，念誦降魔咒則勝妙絕倫。此卦乃榮登寶座之卦。'
             },
             'དྷཱིཿ-དྷཱིཿ': {
                 name: '勝幢高懸',
                 fortune: '上上吉',
                 direction: '上上',
                 verse: '猶如因戰勝諸方而高豎之勝幢，主勝利吉祥，內心所想事業飛黃騰達。',
-                meaning: '表示依憑如意至寶，妙果輾轉增上，極為稀有神奇。',
+                meaning: '表示：依憑如意至寶，妙果輾轉增上，極為稀有神奇。',
                 readings: {
                     '家庭和生命': '家庭無有衰敗，極其殊勝。生命穩若金剛。',
-                    '謀略與籌劃': '善妙非凡。',
+                    '謀略與籌劃': '善妙非凡。正是修持藥丸、寶劍、手幟等法門之良機。',
                     '財運': '財源滾滾，紛紛聚積。宛若如意之寶，一切所願皆能超勝滿足。',
                     '怨敵': '無有怨敵。',
                     '行旅之人': '順利回返。',
                     '疾病': '疾患自然消逝，無有魔障及罪戾。',
-                    '修法': '猶如群星襯托之浩月般皎潔明亮，精進修持本尊，能獲極大成就。',
+                    '修法': '猶如群星襯托之浩月般皎潔明亮，精進修持本尊，能獲極大成就。尤以學習因明更是最佳時機，定可脫穎而出。',
                     '丟失物': '依靠密友指點，則能失而復得。',
-                    '來客及成事': '卦象吉祥。'
+                    '來客及成事': '卦象吉祥。',
+                    '其他諸事': '均為相合之卦象。'
                 },
-                practices: '此卦乃樹立寶幢之卦。若問其他諸事，則均為相合之卦象。'
+                practices: '依止真實、喜金剛、密集金剛及金剛手菩薩，則能增上善法資糧，大吉大利。供養六臂怙主則善妙。諷誦大圓滿法及《真實名經》，依止戰神格薩爾王護法則善妙。此卦乃樹立寶幢之卦。'
             }
         };
 
@@ -1557,6 +1657,8 @@ const hexagramIllustrations = {
 
         let isRolling = false;
         let currentResult = null;
+        let currentYellowIndex = null;
+        let currentWhiteIndex = null;
 
         // Maps syllable index to the target rotation angles [X, Y] needed to show that face
         // HTML faces: dice-1(front)=ཨ, dice-2(back)=དྷཱིཿ, dice-3(right)=ར, dice-4(left)=ཙ, dice-5(top)=ན, dice-6(bottom)=པ
@@ -1734,6 +1836,10 @@ const hexagramIllustrations = {
             if (yellowIndex === null) yellowIndex = syllables.indexOf(yellowSyllable);
             if (whiteIndex === null) whiteIndex = syllables.indexOf(whiteSyllable);
 
+            // Save indices for share image function
+            currentYellowIndex = yellowIndex;
+            currentWhiteIndex = whiteIndex;
+
             const fortuneClass = `fortune-${result.fortune}`;
             document.getElementById('fortuneBadge').className = `fortune-badge ${fortuneClass}`;
             document.getElementById('fortuneBadge').textContent = result.fortune;
@@ -1742,9 +1848,11 @@ const hexagramIllustrations = {
             document.getElementById('directionInfo').textContent = `方位: ${result.direction}`;
             document.getElementById('verse').textContent = result.verse;
 
-            // Add illustration
-            const illusSvg = hexagramIllustrations[key] || '';
-            document.getElementById('illustration-svg').innerHTML = illusSvg;
+            // Add illustration (using JPG image)
+            const yellowNum = yellowIndex + 1; // Convert 0-5 to 1-6
+            const whiteNum = whiteIndex + 1;   // Convert 0-5 to 1-6
+            const imgFilename = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
+            document.getElementById('illustration-svg').innerHTML = `<img src="${imgFilename}" alt="卦象图" style="width:100%;height:100%;object-fit:contain;">`;
 
             const readingSection = document.getElementById('readingSection');
             readingSection.innerHTML = '';
@@ -1849,156 +1957,6 @@ const hexagramIllustrations = {
             });
         }
 
-        function shareImage() {
-            const canvas = document.createElement('canvas');
-            const W = 800, H = 1100;
-            canvas.width = W;
-            canvas.height = H;
-            const ctx = canvas.getContext('2d');
-
-            // Background
-            const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-            bgGrad.addColorStop(0, '#3D0C11');
-            bgGrad.addColorStop(1, '#5C1A1B');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, W, H);
-
-            // Gold border
-            ctx.strokeStyle = '#D4AF37';
-            ctx.lineWidth = 4;
-            ctx.strokeRect(30, 30, W - 60, H - 60);
-            ctx.lineWidth = 1;
-            ctx.strokeRect(40, 40, W - 80, H - 80);
-
-            // Corner ornaments (simple diamond shapes)
-            const drawDiamond = (cx, cy, size) => {
-                ctx.fillStyle = '#D4AF37';
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - size);
-                ctx.lineTo(cx + size, cy);
-                ctx.lineTo(cx, cy + size);
-                ctx.lineTo(cx - size, cy);
-                ctx.closePath();
-                ctx.fill();
-            };
-            drawDiamond(35, 35, 8);
-            drawDiamond(W - 35, 35, 8);
-            drawDiamond(35, H - 35, 8);
-            drawDiamond(W - 35, H - 35, 8);
-
-            // Decorative line
-            ctx.strokeStyle = '#D4AF37';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(200, 130);
-            ctx.lineTo(600, 130);
-            ctx.stroke();
-
-            // Title
-            ctx.fillStyle = '#D4AF37';
-            ctx.font = 'bold 42px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('༄༅། 文殊占卜 །', W / 2, 110);
-
-            // Fortune badge
-            const fortuneColors = {
-                '上上吉': '#FFD700', '上吉': '#90EE90', '吉': '#87CEEB',
-                '中平': '#A9A9A9', '凶': '#FF6347', '大凶': '#DC143C'
-            };
-            ctx.fillStyle = fortuneColors[currentResult.fortune] || '#D4AF37';
-            ctx.font = 'bold 30px sans-serif';
-            ctx.fillText(`【${currentResult.fortune}】`, W / 2, 190);
-
-            // Hexagram name
-            ctx.font = 'bold 60px sans-serif';
-            ctx.fillStyle = '#F5D061';
-            ctx.fillText(currentResult.name, W / 2, 270);
-
-            // Direction
-            ctx.fillStyle = '#B8860B';
-            ctx.font = '22px sans-serif';
-            ctx.fillText(`方位：${currentResult.direction}`, W / 2, 310);
-
-            // Divider
-            ctx.strokeStyle = '#D4AF37';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(200, 340);
-            ctx.lineTo(600, 340);
-            ctx.stroke();
-
-            // Verse - word wrap
-            ctx.fillStyle = '#E8E8E8';
-            ctx.font = '24px sans-serif';
-            const maxLineWidth = 600;
-            const verse = currentResult.verse;
-            let line = '';
-            let y = 390;
-            const lineHeight = 38;
-            for (let i = 0; i < verse.length; i++) {
-                const testLine = line + verse[i];
-                const metrics = ctx.measureText(testLine);
-                if (metrics.width > maxLineWidth && line.length > 0) {
-                    ctx.fillText(line, W / 2, y);
-                    line = verse[i];
-                    y += lineHeight;
-                } else {
-                    line = testLine;
-                }
-            }
-            if (line) ctx.fillText(line, W / 2, y);
-
-            // Meaning
-            y += lineHeight + 20;
-            ctx.fillStyle = '#B8860B';
-            ctx.font = '20px sans-serif';
-            const meaning = currentResult.meaning;
-            line = '';
-            for (let i = 0; i < meaning.length; i++) {
-                const testLine = line + meaning[i];
-                if (ctx.measureText(testLine).width > maxLineWidth && line.length > 0) {
-                    ctx.fillText(line, W / 2, y);
-                    line = meaning[i];
-                    y += 32;
-                } else {
-                    line = testLine;
-                }
-            }
-            if (line) ctx.fillText(line, W / 2, y);
-
-            // Key readings summary
-            y += 50;
-            ctx.fillStyle = '#D4AF37';
-            ctx.font = 'bold 20px sans-serif';
-            const summaryItems = ['家庭和生命', '財運', '疾病', '修法'];
-            for (const item of summaryItems) {
-                if (currentResult.readings[item] && y < H - 120) {
-                    ctx.fillStyle = '#D4AF37';
-                    ctx.font = 'bold 20px sans-serif';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(`${item}：`, 100, y);
-                    ctx.fillStyle = '#E8E8E8';
-                    ctx.font = '19px sans-serif';
-                    const text = currentResult.readings[item];
-                    const truncated = text.length > 28 ? text.slice(0, 28) + '…' : text;
-                    ctx.fillText(truncated, 260, y);
-                    y += 36;
-                }
-            }
-
-            // Footer
-            ctx.textAlign = 'center';
-            ctx.fillStyle = '#8B7355';
-            ctx.font = '18px sans-serif';
-            ctx.fillText('文殊占卜 — 基於全知麥彭仁波切之法教', W / 2, H - 60);
-
-            // Download
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `文殊占卜-${currentResult.name}.png`;
-            link.click();
-            showToast('圖片已下載，可分享至 Instagram');
-        }
 
         function shareWeb() {
             if (navigator.share) {
@@ -2009,6 +1967,66 @@ const hexagramIllustrations = {
                 });
             } else {
                 showToast('您的瀏覽器不支持分享功能');
+            }
+        }
+
+        function updateMetaTags(result, yellowIndex, whiteIndex) {
+            // Update page title
+            document.title = `${result.name} - ${result.fortune} | 文殊占卜`;
+
+            // Update meta description
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+                metaDesc.setAttribute('content', `${result.name}：${result.verse}`);
+            }
+
+            // Update OG tags
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) {
+                ogTitle.setAttribute('content', `${result.name} - ${result.fortune} | 文殊占卜`);
+            }
+
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogDesc) {
+                ogDesc.setAttribute('content', result.verse);
+            }
+
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            if (ogImage) {
+                const yellowNum = yellowIndex + 1;
+                const whiteNum = whiteIndex + 1;
+                const imagePath = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
+                // Use absolute URL for social media crawlers
+                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+                const absoluteUrl = baseUrl + imagePath;
+                ogImage.setAttribute('content', absoluteUrl);
+            }
+
+            // Update Twitter Card tags
+            const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+            if (twitterTitle) {
+                twitterTitle.setAttribute('content', `${result.name} - ${result.fortune} | 文殊占卜`);
+            }
+
+            const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+            if (twitterDesc) {
+                twitterDesc.setAttribute('content', result.verse);
+            }
+
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            if (twitterImage) {
+                const yellowNum = yellowIndex + 1;
+                const whiteNum = whiteIndex + 1;
+                const imagePath = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
+                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+                const absoluteUrl = baseUrl + imagePath;
+                twitterImage.setAttribute('content', absoluteUrl);
+            }
+
+            // Update og:url to current URL
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            if (ogUrl) {
+                ogUrl.setAttribute('content', window.location.href);
             }
         }
 
@@ -2078,6 +2096,9 @@ const hexagramIllustrations = {
                     // Display the result
                     currentResult = result;
                     displayResult(key, yellowSyllable, whiteSyllable, yellowIndex, whiteIndex);
+
+                    // Update meta tags for social sharing
+                    updateMetaTags(result, yellowIndex, whiteIndex);
 
                     // Show "再次占卜" button
                     document.getElementById('rollAgainBtn').style.display = 'inline-block';
