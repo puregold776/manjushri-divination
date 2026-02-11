@@ -1818,7 +1818,11 @@
 
             // Scroll to result
             setTimeout(() => {
-                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                // Scroll to hexagram name (top of result card)
+                const resultCard = document.querySelector('#resultSection .result-card');
+                if (resultCard) {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }, 300);
         }
 
@@ -1882,7 +1886,11 @@
 
                 // Scroll to result
                 setTimeout(() => {
-                    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                    // Scroll to hexagram name (top of result card)
+                const resultCard = document.querySelector('#resultSection .result-card');
+                if (resultCard) {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
                 }, 100);
             }, 3000);
         }
@@ -2187,7 +2195,11 @@
 
                     // Scroll to result after a short delay
                     setTimeout(() => {
-                        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                        // Scroll to hexagram name (top of result card)
+                const resultCard = document.querySelector('#resultSection .result-card');
+                if (resultCard) {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
                     }, 500);
                 }
             }
