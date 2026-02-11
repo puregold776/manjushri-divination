@@ -184,6 +184,39 @@
             color: var(--light-gold);
             margin-bottom: 15px;
             font-size: 1.5em;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .intro h2:hover {
+            color: var(--gold);
+        }
+
+        .intro h2::after {
+            content: '▼';
+            font-size: 0.7em;
+            transition: transform 0.3s ease;
+        }
+
+        .intro.collapsed h2::after {
+            transform: rotate(-90deg);
+        }
+
+        .intro-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+            opacity: 1;
+        }
+
+        .intro.collapsed .intro-content {
+            max-height: 0;
+            opacity: 0;
         }
 
         .intro p {
@@ -766,33 +799,37 @@
     </header>
 
     <div class="container">
-        <section class="intro">
-            <h2>文殊占卜說明</h2>
-            <p>文殊占卜是藏傳佛教傳統的占筮法，源自於<span class="instruction-highlight">全知麥彭仁波切</span>的法教，依靠文殊菩薩心咒觀察得失取捨。</p>
-            <p>兩枚骰子各有六面，分別刻有文殊菩薩心咒六字。黃色骰子代表<span class="instruction-highlight">佛父</span>，白色骰子代表<span class="instruction-highlight">佛母</span>，共可得 36 種卦象。</p>
-            <p><span class="instruction-highlight">請先靜心片刻，觀想文殊菩薩，默念心咒三遍或七遍，再專注於心中所問之事，然後點擊「擲骰占卜」。</span></p>
+        <section class="intro" id="introDescription">
+            <h2 onclick="toggleIntroSection('introDescription')">文殊占卜說明</h2>
+            <div class="intro-content">
+                <p>文殊占卜是藏傳佛教傳統的占筮法，源自於<span class="instruction-highlight">全知麥彭仁波切</span>的法教，依靠文殊菩薩心咒觀察得失取捨。</p>
+                <p>兩枚骰子各有六面，分別刻有文殊菩薩心咒六字。黃色骰子代表<span class="instruction-highlight">佛父</span>，白色骰子代表<span class="instruction-highlight">佛母</span>，共可得 36 種卦象。</p>
+                <p><span class="instruction-highlight">請先靜心片刻，觀想文殊菩薩，默念心咒三遍或七遍，再專注於心中所問之事，然後點擊「擲骰占卜」。</span></p>
+            </div>
         </section>
 
-        <section class="intro">
-            <h2>文殊占卜儀軌</h2>
-            <p>首先觀想前方虛空當中，蓮花月墊之上，文殊菩薩呈圓滿報身裝飾，雙足結跏趺坐勢，身色紅黃，一面二臂，右手持寶劍，左手拈烏巴拉花，花蕊之上為般若經函。並了知彼等一切顯現均如水月般現而無自性。如此明觀後，誠摯祈禱，並念誦下文：</p>
-            <p style="text-align: center; line-height: 1.8; font-weight: bold; font-size: 1.3em;">
-                嗡<br>
-                三時恆常無遮智慧眼<br>
-                祈請文殊勇士垂念我<br>
-                三寶三根緣起無欺故<br>
-                以真實力願令取捨明
-            </p>
-            <p>之後念誦<span class="instruction-highlight">緣起咒 3 遍或 7 遍</span>：</p>
-            <p style="text-align: center; font-size: 1.3em; line-height: 1.8; font-weight: bold;">
-                嗡 耶達<sub>爾</sub>瑪 黑杜札巴瓦 黑敦迭肯 大他嘎多 哈雅瓦迭<sub>的</sub> 迭肯匝友 尼若達 誒旺巴迪 瑪哈夏<sub>日</sub>瑪那耶 梭哈
-            </p>
-            <p>其後盡力念誦<span class="instruction-highlight">文殊菩薩心咒</span>，並虔誠祈禱：</p>
-            <p style="text-align: center; font-size: 1.3em; color: var(--gold); margin: 20px 0; font-weight: bold;">
-                嗡 阿日<sub>阿</sub>巴雜那 諦
-            </p>
-            <p>此時，觀想自己前方虛空中，文殊菩薩與眾眷金光燦爛，真實降臨。</p>
-            <p>心中憶念所占之事並猛厲祈禱，然後扔出骰子，結果之吉凶定可通過骰子明示。</p>
+        <section class="intro" id="introRitual">
+            <h2 onclick="toggleIntroSection('introRitual')">文殊占卜儀軌</h2>
+            <div class="intro-content">
+                <p>首先觀想前方虛空當中，蓮花月墊之上，文殊菩薩呈圓滿報身裝飾，雙足結跏趺坐勢，身色紅黃，一面二臂，右手持寶劍，左手拈烏巴拉花，花蕊之上為般若經函。並了知彼等一切顯現均如水月般現而無自性。如此明觀後，誠摯祈禱，並念誦下文：</p>
+                <p style="text-align: center; line-height: 1.8; font-weight: bold; font-size: 1.3em;">
+                    嗡<br>
+                    三時恆常無遮智慧眼<br>
+                    祈請文殊勇士垂念我<br>
+                    三寶三根緣起無欺故<br>
+                    以真實力願令取捨明
+                </p>
+                <p>之後念誦<span class="instruction-highlight">緣起咒 3 遍或 7 遍</span>：</p>
+                <p style="text-align: center; font-size: 1.3em; line-height: 1.8; font-weight: bold;">
+                    嗡 耶達<sub>爾</sub>瑪 黑杜札巴瓦 黑敦迭肯 大他嘎多 哈雅瓦迭<sub>的</sub> 迭肯匝友 尼若達 誒旺巴迪 瑪哈夏<sub>日</sub>瑪那耶 梭哈
+                </p>
+                <p>其後盡力念誦<span class="instruction-highlight">文殊菩薩心咒</span>，並虔誠祈禱：</p>
+                <p style="text-align: center; font-size: 1.3em; color: var(--gold); margin: 20px 0; font-weight: bold;">
+                    嗡 阿日<sub>阿</sub>巴雜那 諦
+                </p>
+                <p>此時，觀想自己前方虛空中，文殊菩薩與眾眷金光燦爛，真實降臨。</p>
+                <p>心中憶念所占之事並猛厲祈禱，然後扔出骰子，結果之吉凶定可通過骰子明示。</p>
+            </div>
         </section>
 
         <div style="text-align:center; color:var(--gold); font-size:1.6em; letter-spacing:12px; margin-bottom:30px; opacity:0.6;">✦ ༄ ✦</div>
@@ -1840,6 +1877,9 @@
             currentYellowIndex = yellowIndex;
             currentWhiteIndex = whiteIndex;
 
+            // Collapse intro sections when showing result
+            collapseIntroSections();
+
             const fortuneClass = `fortune-${result.fortune}`;
             document.getElementById('fortuneBadge').className = `fortune-badge ${fortuneClass}`;
             document.getElementById('fortuneBadge').textContent = result.fortune;
@@ -2027,6 +2067,25 @@
             const ogUrl = document.querySelector('meta[property="og:url"]');
             if (ogUrl) {
                 ogUrl.setAttribute('content', window.location.href);
+            }
+        }
+
+        function toggleIntroSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.toggle('collapsed');
+            }
+        }
+
+        function collapseIntroSections() {
+            const introDescription = document.getElementById('introDescription');
+            const introRitual = document.getElementById('introRitual');
+
+            if (introDescription) {
+                introDescription.classList.add('collapsed');
+            }
+            if (introRitual) {
+                introRitual.classList.add('collapsed');
             }
         }
 
