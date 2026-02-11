@@ -37,8 +37,10 @@
             let whiteIndex = null;
 
             if (pathMatch) {
-                yellowIndex = parseInt(pathMatch[1]);
-                whiteIndex = parseInt(pathMatch[2]);
+                // Path format: /45 means yellow=4, white=5 (1-based)
+                // Convert to 0-based index
+                yellowIndex = parseInt(pathMatch[1]) - 1;
+                whiteIndex = parseInt(pathMatch[2]) - 1;
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const yStr = urlParams.get('y');
@@ -2117,9 +2119,10 @@
             let whiteIndex = null;
 
             if (pathMatch) {
-                // Path format: /45
-                yellowIndex = parseInt(pathMatch[1]);
-                whiteIndex = parseInt(pathMatch[2]);
+                // Path format: /45 means yellow=4, white=5 (1-based)
+                // Convert to 0-based index
+                yellowIndex = parseInt(pathMatch[1]) - 1;
+                whiteIndex = parseInt(pathMatch[2]) - 1;
             } else {
                 // Fallback to query parameter format for backwards compatibility
                 const urlParams = new URLSearchParams(window.location.search);

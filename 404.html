@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>重定向中...</title>
+    <script>
+        // GitHub Pages 404 redirect handler
+        // Converts paths like /11 to /index.html?y=0&w=0
+        (function() {
+            const pathname = window.location.pathname;
+            
+            // Match two-digit path like /11, /23, etc.
+            const match = pathname.match(/^\/(\d)(\d)$/);
+            
+            if (match) {
+                const yellowNum = parseInt(match[1]);
+                const whiteNum = parseInt(match[2]);
+                
+                // Convert to 0-based index
+                const yellowIndex = yellowNum - 1;
+                const whiteIndex = whiteNum - 1;
+
+                // Valid range check: yellowNum and whiteNum should be 1-6
+                if (yellowNum >= 1 && yellowNum <= 6 &&
+                    whiteNum >= 1 && whiteNum <= 6) {
+                    
+                    // Redirect to index.html with query params
+                    const newUrl = '/index.html?y=' + yellowIndex + '&w=' + whiteIndex;
+                    window.location.replace(newUrl);
+                } else {
+                    // Invalid range, redirect to home
+                    window.location.replace('/index.html');
+                }
+            } else {
+                // Not a hexagram path, redirect to home
+                window.location.replace('/index.html');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <p>正在載入卦象...</p>
+</body>
+</html>
