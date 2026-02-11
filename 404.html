@@ -2,7 +2,59 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>重定向中...</title>
+    <title>文殊占卜 | Manjushri Divination</title>
+
+    <!-- Open Graph / Facebook / Line -->
+    <meta property="og:title" content="文殊占卜 | Manjushri Divination">
+    <meta property="og:description" content="藏傳佛教文殊占卜系統。使用傳統骰子占卜，尋求文殊菩薩的智慧指引。">
+    <meta property="og:image" content="">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="文殊占卜 | Manjushri Divination">
+    <meta name="twitter:description" content="藏傳佛教文殊占卜系統。使用傳統骰子占卜，尋求文殊菩薩的智慧指引。">
+    <meta name="twitter:image" content="">
+
+    <script>
+        // Set OG image based on path BEFORE redirect (for social media crawlers)
+        (function() {
+            const pathname = window.location.pathname;
+            const match = pathname.match(/^\/(\d)(\d)$/);
+
+            if (match) {
+                const yellowNum = parseInt(match[1]);
+                const whiteNum = parseInt(match[2]);
+
+                if (yellowNum >= 1 && yellowNum <= 6 &&
+                    whiteNum >= 1 && whiteNum <= 6) {
+
+                    const imagePath = 'manjusigns/sign' + yellowNum + whiteNum + '.jpg';
+                    const absoluteUrl = window.location.origin + '/' + imagePath;
+
+                    // Update OG meta tags
+                    const ogImage = document.querySelector('meta[property="og:image"]');
+                    if (ogImage) {
+                        ogImage.setAttribute('content', absoluteUrl);
+                    }
+
+                    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+                    if (twitterImage) {
+                        twitterImage.setAttribute('content', absoluteUrl);
+                    }
+
+                    const ogUrl = document.querySelector('meta[property="og:url"]');
+                    if (ogUrl) {
+                        ogUrl.setAttribute('content', window.location.href);
+                    }
+                }
+            }
+        })();
+    </script>
+
     <script>
         // GitHub Pages 404 redirect handler
         // Converts paths like /11 to /index.html?y=0&w=0
@@ -23,7 +75,7 @@
                 // Valid range check: yellowNum and whiteNum should be 1-6
                 if (yellowNum >= 1 && yellowNum <= 6 &&
                     whiteNum >= 1 && whiteNum <= 6) {
-                    
+
                     // Redirect to index.html with query params
                     const newUrl = '/index.html?y=' + yellowIndex + '&w=' + whiteIndex;
                     window.location.replace(newUrl);
