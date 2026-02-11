@@ -163,6 +163,16 @@
             font-style: italic;
         }
 
+        .manjushri-image {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
         /* Main container */
         .container {
             max-width: 1000px;
@@ -734,6 +744,11 @@
             .intro {
                 padding: 20px;
             }
+
+            .manjushri-image {
+                max-width: 320px;
+                padding: 0 20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -747,6 +762,12 @@
 
             .tibetan-title {
                 font-size: 1em;
+            }
+
+            .manjushri-image {
+                max-width: 280px;
+                padding: 0 15px;
+                margin: 15px auto;
             }
 
             .dice-container {
@@ -795,7 +816,7 @@
     <header>
         <h1>文殊占卜</h1>
         <div class="tibetan-title">ཨ་ར་པ་ཙ་ན་དྷཱིཿ</div>
-        <img src="manjushri-orange.png" alt="文殊菩薩法相" style="max-width: 400px; margin: 20px auto; display: block;">
+        <img src="manjushri-orange.png" alt="文殊菩薩法相" class="manjushri-image">
         <p class="tagline">文殊菩薩智慧占卜系統</p>
     </header>
 
