@@ -1806,6 +1806,20 @@
         function confirmManualSelection() {
             if (selectedYellow === null || selectedWhite === null) return;
 
+            // Track manual hexagram selection in Google Analytics
+            const yellowSyl = syllables[selectedYellow];
+            const whiteSyl = syllables[selectedWhite];
+            const hexKey = `${yellowSyl}-${whiteSyl}`;
+            const hexName = hexagrams[hexKey]?.name || 'unknown';
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'manual_selection', {
+                    event_category: 'divination',
+                    event_label: 'Manual Hexagram Selection',
+                    hexagram_name: hexName
+                });
+            }
+
             // Set dice to selected positions
             const diceYellow = document.getElementById('diceYellow');
             const diceWhite = document.getElementById('diceWhite');
@@ -1843,6 +1857,14 @@
 
         function rollDice() {
             if (isRolling) return;
+
+            // Track dice roll event in Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'dice_roll', {
+                    event_category: 'divination',
+                    event_label: 'Roll Dice Button'
+                });
+            }
 
             isRolling = true;
             document.getElementById('rollBtn').disabled = true;
@@ -2004,6 +2026,15 @@
         }
 
         function copyShareLink() {
+            // Track copy link event
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'Copy Link',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
                 showToast('✅ 分享連結已複製！他人可透過此連結查看您的卦象');
@@ -2013,30 +2044,75 @@
         }
 
         function shareFacebook() {
+            // Track Facebook share
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'Facebook',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const text = `文殊占卜：${currentResult.name} (${currentResult.fortune})`;
             const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(window.location.href)}`;
             window.open(url, 'facebook-share', 'width=600,height=400');
         }
 
         function shareLine() {
+            // Track LINE share
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'LINE',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const text = `文殊占卜：${currentResult.name} - ${currentResult.fortune}`;
             const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
             window.open(url, 'line-share', 'width=600,height=400');
         }
 
         function shareThreads() {
+            // Track Threads share
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'Threads',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const text = `文殊占卜：${currentResult.name} (${currentResult.fortune})\n\n${currentResult.verse}\n\n`;
             const url = `https://threads.net/intent/post?text=${encodeURIComponent(text + window.location.href)}`;
             window.open(url, 'threads-share', 'width=600,height=700');
         }
 
         function shareTwitter() {
+            // Track Twitter/X share
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'Twitter',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const text = `文殊占卜：${currentResult.name} (${currentResult.fortune})\n\n${currentResult.verse}`;
             const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
             window.open(url, 'twitter-share', 'width=600,height=400');
         }
 
         function shareWeChat() {
+            // Track WeChat share
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'WeChat',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             const text = `文殊占卜\n卦象：${currentResult.name}\n運勢：${currentResult.fortune}\n\n${currentResult.verse}`;
             navigator.clipboard.writeText(text).then(() => {
                 showToast('已複製到剪貼簿，可粘貼到微信分享');
@@ -2045,6 +2121,15 @@
 
 
         function shareWeb() {
+            // Track Web Share API usage
+            if (typeof gtag !== 'undefined' && currentResult) {
+                gtag('event', 'share', {
+                    method: 'Web Share API',
+                    content_type: 'hexagram',
+                    item_id: currentResult.name
+                });
+            }
+
             if (navigator.share) {
                 navigator.share({
                     title: '文殊占卜',
