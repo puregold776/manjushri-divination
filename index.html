@@ -1946,7 +1946,10 @@
             document.getElementById('resultSection').classList.add('show');
 
             // Update URL with hexagram parameters (using path format /45)
-            const pathSegment = `${yellowIndex}${whiteIndex}`;
+            // Convert 0-based index to 1-based path number
+            const yellowNum = yellowIndex + 1;
+            const whiteNum = whiteIndex + 1;
+            const pathSegment = `${yellowNum}${whiteNum}`;
             const newUrl = `${window.location.origin}/${pathSegment}`;
             window.history.pushState({}, '', newUrl);
         }
