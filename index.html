@@ -1846,12 +1846,7 @@
             document.getElementById('rollAgainBtn').style.display = 'inline-block';
 
             // Scroll to result
-            setTimeout(() => {
-                const resultCard = document.querySelector('#resultSection .result-card');
-                if (resultCard) {
-                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 300);
+            scrollToResultCard();
         }
 
         function rollDice() {
@@ -1921,12 +1916,7 @@
                 document.getElementById('rollAgainBtn').style.display = 'inline-block';
 
                 // Scroll to result
-                setTimeout(() => {
-                    const resultCard = document.querySelector('#resultSection .result-card');
-                    if (resultCard) {
-                        resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
+                scrollToResultCard();
             }, 3000);
         }
 
@@ -1957,7 +1947,20 @@
             const yellowNum = yellowIndex + 1; // Convert 0-5 to 1-6
             const whiteNum = whiteIndex + 1;   // Convert 0-5 to 1-6
             const imgFilename = `manjusigns/sign${yellowNum}${whiteNum}.jpg`;
-            document.getElementById('illustration-svg').innerHTML = `<img src="${imgFilename}" alt="卦象图" style="width:100%;height:100%;object-fit:contain;">`;
+            const imgElement = document.createElement('img');
+            imgElement.src = imgFilename;
+            imgElement.alt = '卦象图';
+            imgElement.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+
+            // Store reference for scroll after image load
+            window.hexagramImageLoaded = false;
+            imgElement.onload = () => {
+                window.hexagramImageLoaded = true;
+            };
+
+            const illustrationContainer = document.getElementById('illustration-svg');
+            illustrationContainer.innerHTML = '';
+            illustrationContainer.appendChild(imgElement);
 
             const readingSection = document.getElementById('readingSection');
             readingSection.innerHTML = '';
@@ -2013,6 +2016,35 @@
             const pathSegment = `${yellowNum}${whiteNum}`;
             const newUrl = `${window.location.origin}/${pathSegment}`;
             window.history.pushState({}, '', newUrl);
+
+            // Trigger scroll after content is rendered
+            // This will be called by external scroll handlers
+            window.needsScrollToResult = true;
+        }
+
+        // Unified scroll function that waits for image and content to load
+        function scrollToResultCard() {
+            const checkAndScroll = () => {
+                const resultCard = document.querySelector('#resultSection .result-card');
+                const resultSection = document.getElementById('resultSection');
+
+                // Check if result is visible and image is loaded
+                if (resultCard && resultSection.classList.contains('show')) {
+                    // Wait for image to load if needed
+                    if (window.hexagramImageLoaded === false) {
+                        setTimeout(checkAndScroll, 100);
+                        return;
+                    }
+
+                    // Scroll to result card
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            };
+
+            // Use requestAnimationFrame to ensure DOM is updated
+            requestAnimationFrame(() => {
+                setTimeout(checkAndScroll, 100);
+            });
         }
 
         function toggleReading(element) {
@@ -2291,13 +2323,8 @@
                     // Show "再次占卜" button
                     document.getElementById('rollAgainBtn').style.display = 'inline-block';
 
-                    // Scroll to result after a short delay
-                    setTimeout(() => {
-                        const resultCard = document.querySelector('#resultSection .result-card');
-                        if (resultCard) {
-                            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }, 500);
+                    // Scroll to result after content is fully rendered
+                    scrollToResultCard();
                 }
             }
         }
