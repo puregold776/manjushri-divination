@@ -1954,9 +1954,15 @@
 
             // Store reference for scroll after image load
             window.hexagramImageLoaded = false;
-            imgElement.onload = () => {
+
+            // Handle both onload (for new images) and complete (for cached images)
+            if (imgElement.complete) {
                 window.hexagramImageLoaded = true;
-            };
+            } else {
+                imgElement.onload = () => {
+                    window.hexagramImageLoaded = true;
+                };
+            }
 
             const illustrationContainer = document.getElementById('illustration-svg');
             illustrationContainer.innerHTML = '';
@@ -2023,7 +2029,10 @@
         }
 
         // Unified scroll function that waits for image and content to load
-        function scrollToResultCard() {
+        function scrollToResultCard(isFromUrlLoad = false) {
+            let attempts = 0;
+            const maxAttempts = 20; // Max 2 seconds (20 * 100ms)
+
             const checkAndScroll = () => {
                 const resultCard = document.querySelector('#resultSection .result-card');
                 const resultSection = document.getElementById('resultSection');
@@ -2032,8 +2041,12 @@
                 if (resultCard && resultSection.classList.contains('show')) {
                     // Wait for image to load if needed
                     if (window.hexagramImageLoaded === false) {
-                        setTimeout(checkAndScroll, 100);
-                        return;
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            setTimeout(checkAndScroll, 100);
+                            return;
+                        }
+                        // If timeout, scroll anyway
                     }
 
                     // Scroll to result card
@@ -2042,8 +2055,10 @@
             };
 
             // Use requestAnimationFrame to ensure DOM is updated
+            // For URL loads, add extra delay to override browser's default scroll-to-top
+            const initialDelay = isFromUrlLoad ? 400 : 100;
             requestAnimationFrame(() => {
-                setTimeout(checkAndScroll, 100);
+                setTimeout(checkAndScroll, initialDelay);
             });
         }
 
@@ -2324,7 +2339,8 @@
                     document.getElementById('rollAgainBtn').style.display = 'inline-block';
 
                     // Scroll to result after content is fully rendered
-                    scrollToResultCard();
+                    // Pass true to indicate this is from URL load (needs extra delay)
+                    scrollToResultCard(true);
                 }
             }
         }
