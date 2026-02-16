@@ -1,0 +1,399 @@
+#!/usr/bin/env python3
+"""
+Generate static hexagram pages with full content (no redirects)
+This solves Google Search Console indexing issues by providing actual content
+"""
+import re
+import json
+
+# Read index.html and extract hexagrams data
+with open('index.html', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Extract the hexagrams object
+match = re.search(r"const hexagrams = ({.*?});", content, re.DOTALL)
+if not match:
+    print("Could not find hexagrams data")
+    exit(1)
+
+hexagrams_js = match.group(1)
+
+# Map syllables to indices
+syllables = ['ཨ', 'ར', 'པ', 'ཙ', 'ན', 'དྷཱིཿ']
+
+# Parse hexagrams - more comprehensive pattern to capture all data
+hexagram_blocks = re.findall(
+    r"'([^']+)':\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}(?=,\s*'|\s*\})",
+    hexagrams_js,
+    re.DOTALL
+)
+
+hexagram_map = {}
+for key, block in hexagram_blocks:
+    # Extract name
+    name_match = re.search(r"name:\s*'([^']+)'", block)
+    name = name_match.group(1) if name_match else ''
+
+    # Extract fortune
+    fortune_match = re.search(r"fortune:\s*'([^']+)'", block)
+    fortune = fortune_match.group(1) if fortune_match else ''
+
+    # Extract verse
+    verse_match = re.search(r"verse:\s*'([^']+)'", block)
+    verse = verse_match.group(1) if verse_match else ''
+
+    # Extract meaning
+    meaning_match = re.search(r"meaning:\s*'([^']+)'", block)
+    meaning = meaning_match.group(1) if meaning_match else ''
+
+    # Extract direction
+    direction_match = re.search(r"direction:\s*'([^']+)'", block)
+    direction = direction_match.group(1) if direction_match else ''
+
+    # Extract practices
+    practices_match = re.search(r"practices:\s*'([^']+)'", block)
+    practices = practices_match.group(1) if practices_match else ''
+
+    # Extract readings
+    readings = {}
+    readings_match = re.search(r"readings:\s*\{([^}]+(?:\{[^}]*\}[^}]*)*)\}", block, re.DOTALL)
+    if readings_match:
+        readings_block = readings_match.group(1)
+        reading_items = re.findall(r"'([^']+)':\s*'([^']+)'", readings_block)
+        readings = {k: v for k, v in reading_items}
+
+    hexagram_map[key] = {
+        'name': name,
+        'fortune': fortune,
+        'verse': verse,
+        'meaning': meaning,
+        'direction': direction,
+        'practices': practices,
+        'readings': readings
+    }
+
+print(f"Found {len(hexagram_map)} hexagrams")
+
+# HTML template for static hexagram pages
+template = """<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNT97Q1GGJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', 'G-XNT97Q1GGJ');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{verse}">
+    <meta name="keywords" content="文殊占卜,{name},{fortune},藏傳佛教,骰子占卜,Manjushri">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://manjumo.com/{yellow}{white}">
+
+    <title>{name} - {fortune} | 文殊占卜</title>
+
+    <!-- Open Graph / Facebook / Line -->
+    <meta property="og:title" content="{name} - {fortune} | 文殊占卜">
+    <meta property="og:description" content="{verse}">
+    <meta property="og:image" content="https://manjumo.com/manjusigns/sign{yellow}{white}.jpg">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://manjumo.com/{yellow}{white}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{name} - {fortune} | 文殊占卜">
+    <meta name="twitter:description" content="{verse}">
+    <meta name="twitter:image" content="https://manjumo.com/manjusigns/sign{yellow}{white}.jpg">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {{
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "{name} - {fortune}",
+      "description": "{verse}",
+      "image": "https://manjumo.com/manjusigns/sign{yellow}{white}.jpg",
+      "author": {{
+        "@type": "Organization",
+        "name": "文殊占卜"
+      }}
+    }}
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="manjushri-orange.png">
+    <link rel="apple-touch-icon" href="manjushri-orange.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+Tibetan&display=swap" rel="stylesheet">
+
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+
+        :root {{
+            --maroon: #5C1A1B;
+            --dark-maroon: #3D0C11;
+            --gold: #D4AF37;
+            --light-gold: #F5D061;
+            --white: #F0F0F0;
+            --text-dark: #2C2C2C;
+            --text-light: #E8E8E8;
+        }}
+
+        body {{
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, var(--dark-maroon) 0%, var(--maroon) 100%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }}
+
+        body::before {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }}
+
+        body > * {{
+            position: relative;
+            z-index: 1;
+        }}
+
+        header {{
+            text-align: center;
+            padding: 40px 20px 30px;
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(45, 12, 17, 0.8);
+        }}
+
+        h1 {{
+            font-size: 2.5em;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }}
+
+        .fortune {{
+            font-size: 1.2em;
+            color: var(--light-gold);
+            margin-bottom: 20px;
+        }}
+
+        .direction {{
+            font-size: 1em;
+            color: var(--light-gold);
+            opacity: 0.9;
+        }}
+
+        .container {{
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }}
+
+        .hexagram-image {{
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+            margin: 30px auto;
+            display: block;
+            border: 3px solid var(--gold);
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }}
+
+        .section {{
+            background: rgba(92, 26, 27, 0.6);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }}
+
+        .section h2 {{
+            color: var(--light-gold);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+        }}
+
+        .section p, .section li {{
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }}
+
+        .verse {{
+            font-size: 1.2em;
+            font-style: italic;
+            color: var(--light-gold);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--gold);
+            margin: 20px 0;
+        }}
+
+        .meaning {{
+            color: var(--light-gold);
+            font-weight: 500;
+        }}
+
+        .readings {{
+            list-style: none;
+        }}
+
+        .readings li {{
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 3px solid var(--gold);
+        }}
+
+        .readings strong {{
+            color: var(--light-gold);
+            display: block;
+            margin-bottom: 5px;
+        }}
+
+        .back-link {{
+            display: inline-block;
+            margin: 30px 0;
+            padding: 12px 30px;
+            background: var(--gold);
+            color: var(--dark-maroon);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }}
+
+        .back-link:hover {{
+            background: var(--light-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }}
+
+        footer {{
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--light-gold);
+            border-top: 1px solid var(--gold);
+            margin-top: 50px;
+        }}
+
+        @media (max-width: 768px) {{
+            h1 {{
+                font-size: 2em;
+            }}
+            .section {{
+                padding: 20px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{name}</h1>
+        <div class="fortune">吉凶：{fortune}</div>
+        <div class="direction">方位：{direction}</div>
+    </header>
+
+    <div class="container">
+        <a href="/" class="back-link">← 返回占卜首頁</a>
+
+        <img src="manjusigns/sign{yellow}{white}.jpg" alt="{name}" class="hexagram-image">
+
+        <div class="section">
+            <h2>卦辭</h2>
+            <div class="verse">{verse}</div>
+            <p class="meaning">{meaning}</p>
+        </div>
+
+        {readings_html}
+
+        <div class="section">
+            <h2>修持建議</h2>
+            <p>{practices}</p>
+        </div>
+
+        <a href="/" class="back-link">← 返回占卜首頁</a>
+    </div>
+
+    <footer>
+        <p>文殊占卜 - 基於全知麥彭仁波切之法教（索達吉堪布 譯）</p>
+    </footer>
+</body>
+</html>
+"""
+
+# Generate pages for all 36 hexagram combinations
+count = 0
+for yellow in range(1, 7):
+    for white in range(1, 7):
+        yellow_index = yellow - 1
+        white_index = white - 1
+
+        # Get syllables
+        yellow_syllable = syllables[yellow_index]
+        white_syllable = syllables[white_index]
+        key = f"{yellow_syllable}-{white_syllable}"
+
+        # Get hexagram info
+        if key in hexagram_map:
+            info = hexagram_map[key]
+
+            # Generate readings HTML
+            readings_html = '<div class="section"><h2>詳細解讀</h2><ul class="readings">'
+            for category, reading in info['readings'].items():
+                readings_html += f'<li><strong>{category}</strong>{reading}</li>'
+            readings_html += '</ul></div>'
+
+            filename = f"{yellow}{white}.html"
+
+            content = template.format(
+                yellow=yellow,
+                white=white,
+                name=info['name'],
+                fortune=info['fortune'],
+                direction=info['direction'],
+                verse=info['verse'],
+                meaning=info['meaning'],
+                readings_html=readings_html,
+                practices=info['practices']
+            )
+
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            count += 1
+            print(f"✓ Generated {filename}: {info['name']} - {info['fortune']}")
+        else:
+            print(f"✗ Warning: No data for {key} ({yellow}{white})")
+
+print(f"\n✓ Successfully generated {count}/36 static hexagram pages")
+print("These pages now contain full content and can be indexed by Google!")
